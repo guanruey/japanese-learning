@@ -5,14 +5,18 @@
 }
 
 :root {
-  --primary: #667eea;
-  --secondary: #764ba2;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --dark: #1f2937;
-  --light: #f9fafb;
-  --border: #e5e7eb;
+  --primary: #7c86ea;
+  --secondary: #a371f7;
+  --success: #3fb950;
+  --warning: #d29922;
+  --danger: #f85149;
+  --dark: #e6edf3;
+  --light: #161b22;
+  --bg: #0d1117;
+  --card: #161b22;
+  --card-hover: #1c2128;
+  --border: #30363d;
+  --text-muted: #8b949e;
 }
 
 body {
@@ -21,7 +25,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--light);
+  background: var(--bg);
   color: var(--dark);
   line-height: 1.6;
 }
@@ -56,6 +60,8 @@ input, textarea, select {
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 14px;
+  background: var(--card);
+  color: var(--dark);
 }
 
 input:focus, textarea:focus, select:focus {

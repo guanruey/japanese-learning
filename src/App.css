@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--light);
+  background: var(--bg);
 }
 
 .app-header {
@@ -10,7 +10,7 @@
   color: white;
   padding: 40px 20px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .header-content h1 {
@@ -29,7 +29,7 @@
   display: flex;
   gap: 10px;
   padding: 20px;
-  background: white;
+  background: var(--card);
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
   justify-content: center;
@@ -38,7 +38,7 @@
 
 .tab-btn {
   padding: 12px 24px;
-  background: var(--light);
+  background: var(--bg);
   color: var(--dark);
   border: 2px solid var(--border);
   border-radius: 8px;
@@ -51,7 +51,7 @@
 .tab-btn:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(124, 134, 234, 0.1);
 }
 
 .tab-btn.active {
@@ -78,9 +78,9 @@
 .app-footer {
   padding: 20px;
   text-align: center;
-  background: white;
+  background: var(--card);
   border-top: 1px solid var(--border);
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
