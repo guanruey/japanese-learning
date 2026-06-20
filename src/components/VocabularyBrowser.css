@@ -130,6 +130,22 @@
   align-items: flex-end;
 }
 
+.vocab-badges .save-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.vocab-badges .save-btn.is-saved {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
 .level-badge {
   padding: 3px 10px;
   border-radius: 20px;
@@ -271,4 +287,5 @@
   .vocab-meanings { grid-template-columns: 1fr; }
   .filter-buttons { flex-direction: column; }
   .filter-divider { display: none; }
+  .vocab-header { align-items: flex-start; }
 }

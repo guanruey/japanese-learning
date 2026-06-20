@@ -1,10 +1,15 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { speak } from '../utils/speech'
+import FuriganaText from './FuriganaText'
 import './GrammarBrowser.css'
 
-export default function GrammarBrowser({ data }) {
+export default function GrammarBrowser({ data, initialLevel = 'all', readingMode = 'furigana', savedIds = [], onToggleSave }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterLevel, setFilterLevel] = useState('all')
+
+  useEffect(() => {
+    setFilterLevel(initialLevel || 'all')
+  }, [initialLevel])
 
   const filtered = useMemo(() => {
     let result = data || []
@@ -17,8 +22,10 @@ export default function GrammarBrowser({ data }) {
       const term = searchTerm.toLowerCase()
       result = result.filter(g =>
         (g.pattern || '').toLowerCase().includes(term) ||
+        (g.reading || '').toLowerCase().includes(term) ||
         (g.meaning_zh || '').toLowerCase().includes(term) ||
-        (g.example_ja || '').includes(searchTerm)
+        (g.example_ja || '').includes(searchTerm) ||
+        (g.example_reading || '').includes(searchTerm)
       )
     }
 
@@ -68,7 +75,20 @@ export default function GrammarBrowser({ data }) {
           filtered.map((grammar) => (
             <div key={grammar.id} className={`grammar-card ${grammar.level?.toLowerCase()}`}>
               <div className="card-header">
-                <h3 className="pattern">{grammar.pattern}</h3>
+                <div className="card-header__title">
+                  <h3 className="pattern">
+                    <FuriganaText text={grammar.pattern} reading={grammar.reading} mode={readingMode} />
+                  </h3>
+                  <button
+                    type="button"
+                    className={savedIds.includes(grammar.id) ? 'save-btn is-saved' : 'save-btn'}
+                    onClick={() => onToggleSave?.(grammar.id)}
+                    aria-pressed={savedIds.includes(grammar.id)}
+                    title={savedIds.includes(grammar.id) ? '保存済み' : '保存する'}
+                  >
+                    {savedIds.includes(grammar.id) ? '★ 保存済み' : '☆ 保存'}
+                  </button>
+                </div>
                 <span className={`level-badge ${grammar.level?.toLowerCase()}`}>
                   {grammar.level}
                 </span>
@@ -87,7 +107,9 @@ export default function GrammarBrowser({ data }) {
 
               <div className="card-example">
                 <div className="example-header">
-                  <p className="example-ja">{grammar.example_ja}</p>
+                  <p className="example-ja">
+                    <FuriganaText text={grammar.example_ja} reading={grammar.example_reading} mode={readingMode} />
+                  </p>
                   <button
                     className="speak-btn"
                     onClick={() => speak(grammar.example_ja)}

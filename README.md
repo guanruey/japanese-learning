@@ -65,11 +65,13 @@ create table if not exists public.grammar (
   id text primary key,
   level text not null,
   pattern text not null,
+  reading text,
   meaning_en text,
   meaning_zh text,
   casual_variant text,
   formal_variant text,
   example_ja text,
+  example_reading text,
   example_zh text,
   explanation text,
   common_mistakes text[],
@@ -90,6 +92,7 @@ create table if not exists public.vocabulary (
   meaning_zh text,
   meaning_en text,
   example_ja text,
+  example_reading text,
   example_zh text,
   synonyms text[],
   antonyms text[],
@@ -105,12 +108,14 @@ create table if not exists public.vocabulary (
 create table if not exists public.phrases (
   id text primary key,
   phrase_ja text not null,
+  reading text,
   formal text,
   casual text,
   meaning_zh text,
   meaning_en text,
   context text,
   example text,
+  example_reading text,
   related text[],
   created_at timestamptz default timezone('utc', now())
 );
@@ -124,6 +129,23 @@ create table if not exists public.phrases (
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
+
+`supabase/add_reading_columns.sql` を Supabase SQL Editor で実行すると、既存環境に `reading` / `example_reading` を追加できます。
+`supabase/seed_phrase_readings.sql` では、現在の会話フレーズ 30 件にふりがなを一括で入れられます。
+`supabase/seed_generated_readings.sql` は、文法と語彙の自動生成済み読み方データを Supabase に反映するための SQL です。
+
+必要なら次のコマンドで読み方データを再生成できます：
+
+```bash
+npm run generate:readings
+```
+
+このコマンドは以下を更新します：
+
+- `src/data/generatedReadings.js`
+- `supabase/seed_generated_readings.sql`
+
+画面上部の `読み方` ボタンは `ふりがな` → `ローマ字` → `OFF` の順で切り替わります。
 
 ## デプロイ（Vercel）
 

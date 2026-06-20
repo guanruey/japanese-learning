@@ -111,6 +111,20 @@ a:hover {
   color: var(--secondary);
 }
 
+ruby {
+  ruby-position: over;
+}
+
+rb {
+  font: inherit;
+}
+
+rt {
+  font-size: 0.58em;
+  line-height: 1.1;
+  color: var(--text-muted);
+}
+
 /* 確保暗色模式下所有背景正確覆蓋 */
 [data-theme="dark"] .browser-controls,
 [data-theme="dark"] .tab-navigation,

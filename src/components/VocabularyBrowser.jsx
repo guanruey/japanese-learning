@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../supabase'
 import { speak } from '../utils/speech'
+import { vocabularyReadings } from '../data/generatedReadings'
+import FuriganaText from './FuriganaText'
 import './VocabularyBrowser.css'
 
 const POS_LABELS = {
@@ -15,7 +17,17 @@ const POS_LABELS = {
   counter: '助数詞',
 }
 
-export default function VocabularyBrowser() {
+function mergeVocabularyReadings(rows = []) {
+  return rows.map((row) => {
+    const fallback = vocabularyReadings[row.id] || {}
+    return {
+      ...row,
+      example_reading: row.example_reading || fallback.example_reading || null,
+    }
+  })
+}
+
+export default function VocabularyBrowser({ initialLevel = 'all', initialPos = 'all', readingMode = 'furigana', savedIds = [], onToggleSave }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -26,6 +38,14 @@ export default function VocabularyBrowser() {
     loadVocabulary()
   }, [])
 
+  useEffect(() => {
+    setFilterLevel(initialLevel || 'all')
+  }, [initialLevel])
+
+  useEffect(() => {
+    setFilterPos(initialPos || 'all')
+  }, [initialPos])
+
   const loadVocabulary = async () => {
     try {
       const { data: rows, error } = await supabase
@@ -33,7 +53,7 @@ export default function VocabularyBrowser() {
         .select('*')
         .order('level, id')
       if (error) throw error
-      setData(rows || [])
+      setData(mergeVocabularyReadings(rows || []))
     } catch (e) {
       console.error(e)
     } finally {
@@ -51,7 +71,8 @@ export default function VocabularyBrowser() {
         (v.kanji || '').toLowerCase().includes(t) ||
         (v.reading || '').includes(searchTerm) ||
         (v.meaning_zh || '').includes(searchTerm) ||
-        (v.meaning_en || '').toLowerCase().includes(t)
+        (v.meaning_en || '').toLowerCase().includes(t) ||
+        (v.example_reading || '').includes(searchTerm)
       )
     }
     return result
@@ -105,10 +126,25 @@ export default function VocabularyBrowser() {
               <div className="vocab-header">
                 <div className="vocab-title">
                   <button className="speak-btn" onClick={() => speak(v.kanji || v.reading)} title="読む">🔊</button>
-                  <h3 className="kanji">{v.kanji || v.reading}</h3>
-                  {v.kanji && <span className="reading">{v.reading}</span>}
+                  <h3 className="kanji">
+                    {v.kanji ? (
+                      <FuriganaText text={v.kanji} reading={v.reading} mode={readingMode} />
+                    ) : (
+                      v.reading
+                    )}
+                  </h3>
+                  {v.kanji && readingMode === 'off' && <span className="reading">{v.reading}</span>}
                 </div>
                 <div className="vocab-badges">
+                  <button
+                    type="button"
+                    className={savedIds.includes(v.id) ? 'save-btn is-saved' : 'save-btn'}
+                    onClick={() => onToggleSave?.(v.id)}
+                    aria-pressed={savedIds.includes(v.id)}
+                    title={savedIds.includes(v.id) ? '保存済み' : '保存する'}
+                  >
+                    {savedIds.includes(v.id) ? '★ 保存済み' : '☆ 保存'}
+                  </button>
                   <span className={`level-badge ${v.level?.toLowerCase()}`}>{v.level}</span>
                   {v.pos && <span className="pos-badge">{POS_LABELS[v.pos] || v.pos}</span>}
                 </div>
@@ -128,7 +164,13 @@ export default function VocabularyBrowser() {
               {v.example_ja && (
                 <div className="vocab-example">
                   <div className="example-header">
-                    <p className="example-ja">{v.example_ja}</p>
+                    <p className="example-ja">
+                      {v.example_reading ? (
+                        <FuriganaText text={v.example_ja} reading={v.example_reading} mode={readingMode} />
+                      ) : (
+                        v.example_ja
+                      )}
+                    </p>
                     <button className="speak-btn" onClick={() => speak(v.example_ja)} title="読む">🔊</button>
                   </div>
                   <p className="example-zh">{v.example_zh}</p>

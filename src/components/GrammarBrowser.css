@@ -106,6 +106,13 @@
   gap: 10px;
 }
 
+.card-header__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .pattern {
   font-size: 1.5rem;
   font-weight: 700;
@@ -132,6 +139,22 @@
 
 .grammar-card.n4 .level-badge {
   color: var(--secondary);
+}
+
+.save-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.save-btn.is-saved {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.35);
 }
 
 .card-meanings {
@@ -267,5 +290,9 @@
 
   .filter-btn {
     width: 100%;
+  }
+
+  .card-header {
+    align-items: flex-start;
   }
 }

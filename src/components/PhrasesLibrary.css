@@ -99,6 +99,29 @@
   flex: 1;
 }
 
+.phrase-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.phrase-badges .save-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.phrase-badges .save-btn.is-saved {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
 .phrase-ja {
   font-size: 1.2rem;
   font-weight: 700;
@@ -206,4 +229,6 @@
   .phrase-cards { grid-template-columns: 1fr; }
   .phrase-variants { grid-template-columns: 1fr; }
   .filter-buttons { flex-direction: column; }
+  .phrase-header { align-items: flex-start; }
+  .phrase-badges { align-items: flex-start; }
 }
