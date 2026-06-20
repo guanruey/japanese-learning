@@ -147,7 +147,7 @@
 }
 
 .study-launch__card--primary {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.14), rgba(255, 255, 255, 0.92));
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.14), var(--card));
 }
 
 .study-launch__eyebrow {
