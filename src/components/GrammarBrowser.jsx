@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { speak } from '../utils/speech'
 import './GrammarBrowser.css'
 
 export default function GrammarBrowser({ data }) {
@@ -85,7 +86,16 @@ export default function GrammarBrowser({ data }) {
               </div>
 
               <div className="card-example">
-                <p className="example-ja">{grammar.example_ja}</p>
+                <div className="example-header">
+                  <p className="example-ja">{grammar.example_ja}</p>
+                  <button
+                    className="speak-btn"
+                    onClick={() => speak(grammar.example_ja)}
+                    title="読む"
+                  >
+                    🔊
+                  </button>
+                </div>
                 <p className="example-zh">{grammar.example_zh}</p>
               </div>
 

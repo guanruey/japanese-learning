@@ -9,10 +9,21 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('grammar')
   const [grammarData, setGrammarData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [theme, setTheme] = useState('dark')
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark'
+    setTheme(savedTheme)
+    document.documentElement.setAttribute('data-theme', savedTheme)
     loadGrammarData()
   }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
+    localStorage.setItem('theme', newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+  }
 
   const loadGrammarData = async () => {
     try {
@@ -36,6 +47,9 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
+        <button className="theme-toggle" onClick={toggleTheme} title="テーマ切り替え">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
         <div className="header-content">
           <h1>📚 日本語学習プラットフォーム</h1>
           <p>JLPT N5 / N4 インタラクティブ学習ガイド</p>

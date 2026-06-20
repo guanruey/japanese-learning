@@ -171,11 +171,36 @@
   border-left: 3px solid var(--warning);
 }
 
+.example-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .example-ja {
   font-size: 1rem;
   font-weight: 500;
   color: var(--dark);
-  margin-bottom: 5px;
+  margin: 0;
+  flex: 1;
+}
+
+.speak-btn {
+  background: transparent;
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.speak-btn:hover {
+  background: rgba(210, 153, 34, 0.2);
+  transform: scale(1.1);
 }
 
 .example-zh {
