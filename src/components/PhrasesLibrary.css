@@ -8,10 +8,11 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: white;
+  background: var(--card);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
 }
 
 .search-input {
@@ -21,6 +22,12 @@
   border: 2px solid var(--border);
   border-radius: 6px;
   transition: border-color 0.3s;
+  background: var(--bg);
+  color: var(--dark);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-input:focus {
@@ -30,15 +37,16 @@
 }
 
 .phrases-content {
-  background: white;
+  background: var(--card);
   border-radius: 8px;
   padding: 60px 20px;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
 }
 
 .coming-soon {
-  color: #999;
+  color: var(--text-muted);
 }
 
 .coming-soon h2 {
