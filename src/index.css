@@ -110,3 +110,28 @@ a {
 a:hover {
   color: var(--secondary);
 }
+
+/* 確保暗色模式下所有背景正確覆蓋 */
+[data-theme="dark"] .browser-controls,
+[data-theme="dark"] .tab-navigation,
+[data-theme="dark"] .grammar-card,
+[data-theme="dark"] .no-results {
+  background: var(--card) !important;
+}
+
+[data-theme="dark"] .search-input,
+[data-theme="dark"] .filter-btn,
+[data-theme="dark"] .meaning,
+[data-theme="dark"] .level-badge,
+[data-theme="dark"] .tab-btn {
+  background: var(--bg) !important;
+  color: var(--dark) !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: var(--bg) !important;
+  color: var(--dark) !important;
+  border-color: var(--border) !important;
+}
