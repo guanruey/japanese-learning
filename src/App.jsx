@@ -95,7 +95,16 @@ export default function App() {
 
       <footer className="app-footer">
         <p>💡 会話学習に最適化 | 深く、速く、効率よく</p>
-        <p className="copyright">© 2026 日本語学習プラットフォーム. All rights reserved.</p>
+        <p className="author-info">
+          作者：<strong>Grant, K. J. Huang, Ph.D. 黃冠叡</strong>
+          {' '}
+          <a href="mailto:guanruey@gmail.com">📧 联系</a>
+        </p>
+        <p className="copyright">
+          © 2025-2026 日本語学習プラットフォーム. All rights reserved.
+          <br />
+          版權所有，保留所有權利。此網站內容可免費用於學習，禁止未經授權的商業或其他使用。
+        </p>
       </footer>
     </div>
   )
