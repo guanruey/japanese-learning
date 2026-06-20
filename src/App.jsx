@@ -9,10 +9,10 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('grammar')
   const [grammarData, setGrammarData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [theme, setTheme] = useState('dark')
+  const [theme, setTheme] = useState('light')
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark'
+    const savedTheme = localStorage.getItem('theme') || 'light'
     setTheme(savedTheme)
     document.documentElement.setAttribute('data-theme', savedTheme)
     loadGrammarData()
@@ -95,6 +95,7 @@ export default function App() {
 
       <footer className="app-footer">
         <p>💡 会話学習に最適化 | 深く、速く、効率よく</p>
+        <p className="copyright">© 2026 日本語学習プラットフォーム. All rights reserved.</p>
       </footer>
     </div>
   )
