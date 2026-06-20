@@ -98,7 +98,7 @@ export default function App() {
         <p className="author-info">
           作者：<strong>Grant, K. J. Huang, Ph.D. 黃冠叡</strong>
           {' '}
-          <a href="mailto:guanruey@gmail.com">📧 联系</a>
+          <a href="mailto:guanruey@gmail.com">📧 聯絡</a>
         </p>
         <p className="copyright">
           © 2025-2026 日本語学習プラットフォーム. All rights reserved.
