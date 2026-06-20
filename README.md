@@ -5,8 +5,8 @@ JLPT N5/N4 対応のインタラクティブな日本語学習プラットフォ
 ## 機能
 
 - 📝 **文法ブラウザ** - 110+ の文法点を詳細な説明付きで学習
-- 📖 **語彙ブラウザ** - N5/N4 の全単語（準備中）
-- 💬 **会話フレーズ** - 実用的なフレーズ集（準備中）
+- 📖 **語彙ブラウザ** - N5/N4 の語彙を読み方つきで学習
+- 💬 **会話フレーズ** - 実用的なフレーズ集を読み方つきで練習
 - 🔍 **検索・フィルタ機能** - 素早く学習内容を探せる
 - 🎯 **会話学習に最適化** - 実践的な使用例を中心に
 
@@ -133,6 +133,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 `supabase/add_reading_columns.sql` を Supabase SQL Editor で実行すると、既存環境に `reading` / `example_reading` を追加できます。
 `supabase/seed_phrase_readings.sql` では、現在の会話フレーズ 30 件にふりがなを一括で入れられます。
 `supabase/seed_generated_readings.sql` は、文法と語彙の自動生成済み読み方データを Supabase に反映するための SQL です。
+`supabase/fix_grammar_example_naturalness.sql` は、人工修正した文法例句 4 筆を正式環境へ反映するための SQL です。
 
 必要なら次のコマンドで読み方データを再生成できます：
 
@@ -144,6 +145,8 @@ npm run generate:readings
 
 - `src/data/generatedReadings.js`
 - `supabase/seed_generated_readings.sql`
+
+教材の自然さを優先して先に画面表示を守るため、`src/data/grammarOverrides.js` で一部の文法例句を前端側から上書きしています。長期的には同内容を `supabase/fix_grammar_example_naturalness.sql` で DB 側にも反映してください。
 
 画面上部の `読み方` ボタンは `ふりがな` → `ローマ字` → `OFF` の順で切り替わります。
 

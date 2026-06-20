@@ -3,6 +3,7 @@ import { supabase } from './supabase'
 import GrammarBrowser from './components/GrammarBrowser'
 import VocabularyBrowser from './components/VocabularyBrowser'
 import { grammarReadings } from './data/generatedReadings'
+import { grammarOverrides } from './data/grammarOverrides'
 import PhrasesLibrary from './components/PhrasesLibrary'
 import './App.css'
 
@@ -37,10 +38,12 @@ function toggleStoredId(current, id) {
 function mergeGrammarReadings(rows = []) {
   return rows.map((row) => {
     const fallback = grammarReadings[row.id] || {}
+    const override = grammarOverrides[row.id] || {}
     return {
       ...row,
-      reading: row.reading || fallback.reading || null,
-      example_reading: row.example_reading || fallback.example_reading || null,
+      ...override,
+      reading: override.reading || row.reading || fallback.reading || null,
+      example_reading: override.example_reading || row.example_reading || fallback.example_reading || null,
     }
   })
 }
