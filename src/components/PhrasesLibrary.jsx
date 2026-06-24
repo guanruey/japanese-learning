@@ -5,7 +5,7 @@ import FuriganaText from './FuriganaText'
 import { fallbackPhrases } from '../data/phrases'
 import './PhrasesLibrary.css'
 
-const CATEGORIES = ['全部', '問候', '購物', '問路', '餐廳', '就醫', '職場', '情感']
+const CATEGORIES = ['全部', '問候', '購物', '問路', '餐廳', '就醫', '職場', '情感', '交通', '住宿', '標示']
 
 export default function PhrasesLibrary({ initialCategory = '全部', readingMode = 'furigana', savedIds = [], onToggleSave }) {
   const [data, setData] = useState(fallbackPhrases)
