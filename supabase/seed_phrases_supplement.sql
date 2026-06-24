@@ -80,3 +80,11 @@ on conflict (id) do update set category=excluded.category, phrase_ja=excluded.ph
 insert into public.phrases (id, category, phrase_ja, reading, formal, casual, meaning_zh, context, example, example_reading) values
 ('50', '餐廳', 'そのままで大丈夫です', 'そのままでだいじょうぶです', 'そのままで結構です', 'そのままでいい', 'これ樣就好了，不需要額外的', '拒絕袋子、餐具或加熱時', 'お箸はそのままで大丈夫です。フォークをいただけますか？', 'おはしはそのままでだいじょうぶです。フォークをいただけますか？')
 on conflict (id) do update set category=excluded.category, phrase_ja=excluded.phrase_ja, reading=excluded.reading, formal=excluded.formal, casual=excluded.casual, meaning_zh=excluded.meaning_zh, context=excluded.context, example=excluded.example, example_reading=excluded.example_reading;
+
+insert into public.phrases (id, category, phrase_ja, reading, formal, casual, meaning_zh, context, example, example_reading) values
+('51', '餐廳', '領収書をお願いします', 'りょうしゅうしょをおねがいします', '領収書をお願いいたします', '領収書ください', '請給我正式收據（報帳用）', '需要可報帳的正式發票時（與レシート不同）', 'お会計をお願いします。領収書もいただけますか？', 'おかいけいをおねがいします。りょうしゅうしょもいただけますか？')
+on conflict (id) do update set category=excluded.category, phrase_ja=excluded.phrase_ja, reading=excluded.reading, formal=excluded.formal, casual=excluded.casual, meaning_zh=excluded.meaning_zh, context=excluded.context, example=excluded.example, example_reading=excluded.example_reading;
+
+insert into public.phrases (id, category, phrase_ja, reading, formal, casual, meaning_zh, context, example, example_reading) values
+('52', '餐廳', '〜の料理はありますか', '〜のりょうりはありますか', '〜を使ったお料理はございますか', '〜の料理ある？', '有含〜的料理嗎？', '表達飲食限制後詢問替代菜色', '牛肉は食べられません。魚の料理はありますか？', 'ぎゅうにくはたべられません。さかなのりょうりはありますか？')
+on conflict (id) do update set category=excluded.category, phrase_ja=excluded.phrase_ja, reading=excluded.reading, formal=excluded.formal, casual=excluded.casual, meaning_zh=excluded.meaning_zh, context=excluded.context, example=excluded.example, example_reading=excluded.example_reading;

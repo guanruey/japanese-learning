@@ -49,4 +49,6 @@ export const fallbackPhrases = [
   { id: 48, category: '餐廳', phrase_ja: 'かしこまりました', reading: 'かしこまりました', formal: 'かしこまりました', casual: 'わかりました', meaning_zh: '好的，我明白了（敬語）', context: '店員確認點餐時使用，比はい更正式', example: 'ラーメンをひとつですね。かしこまりました。', example_reading: 'ラーメンをひとつですね。かしこまりました。' },
   { id: 49, category: '餐廳', phrase_ja: 'お会計をお願いします', reading: 'おかいけいをおねがいします', formal: 'お会計をお願いいたします', casual: 'お会計', meaning_zh: '請幫我結帳', context: '用餐完畢要求結帳', example: 'すみません、お会計をお願いします。カードで払えますか？', example_reading: 'すみません、おかいけいをおねがいします。カードではらえますか？' },
   { id: 50, category: '餐廳', phrase_ja: 'そのままで大丈夫です', reading: 'そのままでだいじょうぶです', formal: 'そのままで結構です', casual: 'そのままでいい', meaning_zh: '這樣就好了，不需要額外的', context: '拒絕袋子、餐具或加熱時', example: 'お箸はそのままで大丈夫です。フォークをいただけますか？', example_reading: 'おはしはそのままでだいじょうぶです。フォークをいただけますか？' },
+  { id: 51, category: '餐廳', phrase_ja: '領収書をお願いします', reading: 'りょうしゅうしょをおねがいします', formal: '領収書をお願いいたします', casual: '領収書ください', meaning_zh: '請給我正式收據（報帳用）', context: '需要可報帳的正式發票時（與レシート不同）', example: 'お会計をお願いします。領収書もいただけますか？', example_reading: 'おかいけいをおねがいします。りょうしゅうしょもいただけますか？' },
+  { id: 52, category: '餐廳', phrase_ja: '〜の料理はありますか', reading: '〜のりょうりはありますか', formal: '〜を使ったお料理はございますか', casual: '〜の料理ある？', meaning_zh: '有含〜的料理嗎？', context: '表達飲食限制後詢問替代菜色', example: '牛肉は食べられません。魚の料理はありますか？', example_reading: 'ぎゅうにくはたべられません。さかなのりょうりはありますか？' },
 ]
