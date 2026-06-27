@@ -257,3 +257,44 @@
     align-items: flex-start;
   }
 }
+
+[data-theme="dark"] .english-writing__header {
+  background:
+    radial-gradient(circle at top left, rgba(208, 145, 72, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-writing__eyebrow {
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .english-writing__metrics span,
+[data-theme="dark"] .english-writing__badges span,
+[data-theme="dark"] .english-writing__tags span {
+  background: rgba(197, 109, 45, 0.16);
+  border-color: rgba(197, 109, 45, 0.24);
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .english-writing-card {
+  background: rgba(31, 41, 55, 0.86);
+}
+
+[data-theme="dark"] .english-writing-card.is-active {
+  background: linear-gradient(180deg, rgba(99, 63, 41, 0.88), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-writing__panel {
+  background: rgba(31, 41, 55, 0.84);
+  border-color: rgba(197, 109, 45, 0.22);
+}
+
+[data-theme="dark"] .english-writing__panel--weak {
+  background: linear-gradient(180deg, rgba(82, 58, 43, 0.9), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-writing__reveal {
+  background: rgba(197, 109, 45, 0.16);
+  border-color: rgba(197, 109, 45, 0.24);
+  color: #f2d4bf;
+}

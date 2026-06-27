@@ -233,3 +233,30 @@
     justify-content: flex-start;
   }
 }
+
+[data-theme="dark"] .english-expressions__header {
+  background:
+    radial-gradient(circle at top right, rgba(230, 183, 74, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-expressions__metrics span,
+[data-theme="dark"] .english-expressions__badges span,
+[data-theme="dark"] .english-expressions__tags span {
+  background: rgba(93, 180, 151, 0.16);
+  border-color: rgba(93, 180, 151, 0.24);
+  color: #d8f0e7;
+}
+
+[data-theme="dark"] .english-expression-card {
+  background: rgba(31, 41, 55, 0.86);
+}
+
+[data-theme="dark"] .english-expression-card.is-active {
+  background: linear-gradient(180deg, rgba(42, 86, 72, 0.9), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-expressions__panel {
+  background: rgba(31, 41, 55, 0.84);
+  border-color: rgba(93, 180, 151, 0.22);
+}

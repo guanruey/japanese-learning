@@ -246,3 +246,40 @@
     justify-content: flex-start;
   }
 }
+
+[data-theme="dark"] .english-vocabulary__header {
+  background:
+    radial-gradient(circle at top right, rgba(92, 122, 198, 0.14), transparent 32%),
+    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-vocabulary__eyebrow {
+  color: #c7d5ff;
+}
+
+[data-theme="dark"] .english-vocabulary__metrics span,
+[data-theme="dark"] .english-vocabulary__badges span,
+[data-theme="dark"] .english-vocabulary__tags span {
+  background: rgba(92, 122, 198, 0.16);
+  border-color: rgba(92, 122, 198, 0.24);
+  color: #c7d5ff;
+}
+
+[data-theme="dark"] .english-vocabulary-card {
+  background: rgba(31, 41, 55, 0.86);
+}
+
+[data-theme="dark"] .english-vocabulary-card.is-active {
+  background: linear-gradient(180deg, rgba(53, 72, 112, 0.88), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-vocabulary__panel {
+  background: rgba(31, 41, 55, 0.84);
+  border-color: rgba(92, 122, 198, 0.22);
+}
+
+[data-theme="dark"] .english-vocabulary__tags--muted span {
+  background: rgba(111, 125, 152, 0.16);
+  border-color: rgba(111, 125, 152, 0.24);
+  color: #c4cad7;
+}

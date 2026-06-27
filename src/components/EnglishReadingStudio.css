@@ -248,3 +248,45 @@
     justify-content: flex-start;
   }
 }
+
+[data-theme="dark"] .english-reading__header {
+  background:
+    radial-gradient(circle at top left, rgba(127, 68, 148, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-reading__eyebrow {
+  color: #e4cdf0;
+}
+
+[data-theme="dark"] .english-reading__metrics span,
+[data-theme="dark"] .english-reading__badges span,
+[data-theme="dark"] .english-reading__glossary span {
+  background: rgba(125, 71, 151, 0.16);
+  border-color: rgba(125, 71, 151, 0.24);
+  color: #e4cdf0;
+}
+
+[data-theme="dark"] .english-reading-card {
+  background: rgba(31, 41, 55, 0.86);
+}
+
+[data-theme="dark"] .english-reading-card.is-active {
+  background: linear-gradient(180deg, rgba(82, 57, 98, 0.88), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .english-reading__panel,
+[data-theme="dark"] .english-reading__question-card {
+  background: rgba(31, 41, 55, 0.84);
+  border-color: rgba(125, 71, 151, 0.22);
+}
+
+[data-theme="dark"] .english-reading__choices li.is-correct,
+[data-theme="dark"] .english-reading__reveal {
+  color: #e4cdf0;
+}
+
+[data-theme="dark"] .english-reading__reveal {
+  background: rgba(125, 71, 151, 0.16);
+  border-color: rgba(125, 71, 151, 0.24);
+}

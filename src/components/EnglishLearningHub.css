@@ -199,3 +199,28 @@
     align-items: flex-start;
   }
 }
+
+[data-theme="dark"] .english-hero {
+  background:
+    radial-gradient(circle at top left, rgba(189, 208, 102, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(11, 93, 68, 0.2), rgba(45, 55, 72, 0.96));
+}
+
+[data-theme="dark"] .english-hero__panel,
+[data-theme="dark"] .english-module__card,
+[data-theme="dark"] .english-overview-card {
+  background: rgba(26, 32, 44, 0.82);
+  border-color: rgba(93, 180, 151, 0.22);
+}
+
+[data-theme="dark"] .english-chip,
+[data-theme="dark"] .english-overview-card__button,
+[data-theme="dark"] .english-module__jump {
+  background: rgba(93, 180, 151, 0.16);
+  border-color: rgba(93, 180, 151, 0.26);
+  color: var(--ink-soft);
+}
+
+[data-theme="dark"] .english-module {
+  background: linear-gradient(180deg, rgba(45, 55, 72, 0.94), rgba(26, 32, 44, 0.98));
+}
