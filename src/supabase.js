@@ -14,6 +14,12 @@ function createFallbackSupabaseClient() {
             },
           }
         },
+        upsert() {
+          return Promise.resolve({
+            data: null,
+            error: new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY first.'),
+          })
+        },
       }
     },
   }

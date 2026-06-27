@@ -2,21 +2,28 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 import GrammarBrowser from './components/GrammarBrowser'
 import VocabularyBrowser from './components/VocabularyBrowser'
+import PhrasesLibrary from './components/PhrasesLibrary'
+import EnglishLearningHub from './components/EnglishLearningHub'
+import ProtectedContentStudio from './components/ProtectedContentStudio'
+import ScenarioStudio from './components/ScenarioStudio'
+import SpeechSettingsPanel from './components/SpeechSettingsPanel'
 import { grammarReadings } from './data/generatedReadings'
 import { grammarOverrides } from './data/grammarOverrides'
-import PhrasesLibrary from './components/PhrasesLibrary'
+import { ENGLISH_TABS, englishExpressions, englishModuleSummaries, englishOverviewCards, englishReadingPassages, englishVocabularySets, englishWritingPoints } from './data/englishContent'
 import './App.css'
 
 const STORAGE_KEYS = {
   theme: 'theme',
-  activeTab: 'japanese-learning-active-tab',
+  activeTrack: 'language-learning-active-track',
+  japaneseTab: 'japanese-learning-active-tab',
+  englishTab: 'english-learning-active-tab',
   readingGuide: 'japanese-learning-reading-guide',
   grammarSaved: 'japanese-learning-saved-grammar',
   vocabularySaved: 'japanese-learning-saved-vocabulary',
   phrasesSaved: 'japanese-learning-saved-phrases',
 }
 
-const TAB_LABELS = {
+const JAPANESE_TAB_LABELS = {
   grammar: '文法',
   vocabulary: '語彙',
   phrases: '会話フレーズ',
@@ -49,7 +56,9 @@ function mergeGrammarReadings(rows = []) {
 }
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState(() => localStorage.getItem(STORAGE_KEYS.activeTab) || 'grammar')
+  const [activeTrack, setActiveTrack] = useState(() => localStorage.getItem(STORAGE_KEYS.activeTrack) || 'japanese')
+  const [activeJapaneseTab, setActiveJapaneseTab] = useState(() => localStorage.getItem(STORAGE_KEYS.japaneseTab) || 'grammar')
+  const [activeEnglishTab, setActiveEnglishTab] = useState(() => localStorage.getItem(STORAGE_KEYS.englishTab) || 'expressions')
   const [grammarData, setGrammarData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [theme, setTheme] = useState('light')
@@ -62,40 +71,20 @@ export default function App() {
   const [savedPhraseIds, setSavedPhraseIds] = useState(() => loadStoredValue(STORAGE_KEYS.phrasesSaved, []))
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light'
+    const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'light'
     setTheme(savedTheme)
     document.documentElement.setAttribute('data-theme', savedTheme)
     loadGrammarData()
   }, [])
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
-  }
-
-  const cycleReadingGuide = () => {
-    setReadingMode((current) => {
-      if (current === 'furigana') return 'romaji'
-      if (current === 'romaji') return 'off'
-      return 'furigana'
-    })
-  }
-
   const loadGrammarData = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('grammar')
-        .select('*')
-        .order('level, id')
-
+      const { data, error } = await supabase.from('grammar').select('*').order('level, id')
       if (error) throw error
       setGrammarData(mergeGrammarReadings(data || []))
     } catch (error) {
       console.error('Error loading grammar:', error)
-      // 使用本地備用資料
       setGrammarData([])
     } finally {
       setLoading(false)
@@ -103,8 +92,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.activeTab, activeTab)
-  }, [activeTab])
+    localStorage.setItem(STORAGE_KEYS.activeTrack, activeTrack)
+  }, [activeTrack])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.japaneseTab, activeJapaneseTab)
+  }, [activeJapaneseTab])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.englishTab, activeEnglishTab)
+  }, [activeEnglishTab])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.readingGuide, readingMode)
@@ -122,11 +119,24 @@ export default function App() {
     localStorage.setItem(STORAGE_KEYS.phrasesSaved, JSON.stringify(savedPhraseIds))
   }, [savedPhraseIds])
 
-  const savedCount = savedGrammarIds.length + savedVocabularyIds.length + savedPhraseIds.length
-  const continueLabel = TAB_LABELS[activeTab] || '學習'
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
+    localStorage.setItem(STORAGE_KEYS.theme, newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+  }
 
-  const openQuickStart = (tab, config = {}) => {
-    setActiveTab(tab)
+  const cycleReadingGuide = () => {
+    setReadingMode((current) => {
+      if (current === 'furigana') return 'romaji'
+      if (current === 'romaji') return 'off'
+      return 'furigana'
+    })
+  }
+
+  const openJapaneseQuickStart = (tab, config = {}) => {
+    setActiveTrack('japanese')
+    setActiveJapaneseTab(tab)
     if (config.grammarLevel) setGrammarFilter(config.grammarLevel)
     if (config.vocabularyLevel || config.vocabularyPos) {
       setVocabularyFilter({
@@ -135,6 +145,11 @@ export default function App() {
       })
     }
     if (config.phraseCategory) setPhraseFilter(config.phraseCategory)
+  }
+
+  const openEnglishModule = (tab) => {
+    setActiveTrack('english')
+    setActiveEnglishTab(tab)
   }
 
   const toggleGrammarSaved = (id) => {
@@ -149,99 +164,194 @@ export default function App() {
     setSavedPhraseIds((current) => toggleStoredId(current, id))
   }
 
+  const savedCount = savedGrammarIds.length + savedVocabularyIds.length + savedPhraseIds.length
+  const continueLabel = JAPANESE_TAB_LABELS[activeJapaneseTab] || '學習'
+
   return (
-    <div className="app">
+    <div className={`app ${activeTrack === 'english' ? 'app--english' : ''}`}>
       <header className="app-header">
-        <button className="theme-toggle" onClick={toggleTheme} title="テーマ切り替え">
+        <button className="theme-toggle" onClick={toggleTheme} title="Theme">
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+
         <div className="header-content">
-          <h1>📚 日本語学習プラットフォーム</h1>
-          <p>JLPT N5 / N4 の文法・語彙・会話を、毎回ちょっとずつ積み上げるための学習サイト</p>
-          <div className="header-subline">
-            <span>今日の入口: {continueLabel}</span>
-            <span>保存済み: {savedCount} 件</span>
-            <span>前回の続き: {continueLabel}</span>
+          <div className="track-switch">
+            <button
+              className={`track-switch__button ${activeTrack === 'japanese' ? 'active' : ''}`}
+              onClick={() => setActiveTrack('japanese')}
+            >
+              日本語學習
+            </button>
+            <button
+              className={`track-switch__button ${activeTrack === 'english' ? 'active' : ''}`}
+              onClick={() => setActiveTrack('english')}
+            >
+              English Lab
+            </button>
+            <button
+              className={`track-switch__button ${activeTrack === 'studio' ? 'active' : ''}`}
+              onClick={() => setActiveTrack('studio')}
+            >
+              Content Studio
+            </button>
+            <button
+              className={`track-switch__button ${activeTrack === 'scenario' ? 'active' : ''}`}
+              onClick={() => setActiveTrack('scenario')}
+            >
+              Scenario Studio
+            </button>
           </div>
-          <div className="header-actions">
-            <button className="cta-button cta-button--primary" onClick={() => openQuickStart('grammar', { grammarLevel: 'N5' })}>
-              今日 10 分で文法
-            </button>
-            <button className="cta-button" onClick={() => openQuickStart('vocabulary', { vocabularyLevel: 'N5', vocabularyPos: 'noun' })}>
-              語彙から始める
-            </button>
-            <button className="cta-button" onClick={() => openQuickStart('phrases', { phraseCategory: '問候' })}>
-              会話フレーズを練習
-            </button>
-            <button className="cta-button" onClick={cycleReadingGuide}>
-              読み方 {readingMode === 'furigana' ? 'ふりがな' : readingMode === 'romaji' ? 'ローマ字' : 'OFF'}
-            </button>
-          </div>
+
+          {activeTrack === 'japanese' ? (
+            <>
+              <h1>日本語学習プラットフォーム</h1>
+              <p>JLPT N5 / N4 の文法・語彙・会話を、毎回ちょっとずつ積み上げるための学習サイト</p>
+              <div className="header-subline">
+                <span>今日の入口: {continueLabel}</span>
+                <span>保存済み: {savedCount} 件</span>
+                <span>前回の続き: {continueLabel}</span>
+              </div>
+              <div className="header-actions">
+                <button className="cta-button cta-button--primary" onClick={() => openJapaneseQuickStart('grammar', { grammarLevel: 'N5' })}>
+                  今日 10 分で文法
+                </button>
+                <button className="cta-button" onClick={() => openJapaneseQuickStart('vocabulary', { vocabularyLevel: 'N5', vocabularyPos: 'noun' })}>
+                  語彙から始める
+                </button>
+                <button className="cta-button" onClick={() => openJapaneseQuickStart('phrases', { phraseCategory: '問候' })}>
+                  会話フレーズを練習
+                </button>
+                <button className="cta-button" onClick={cycleReadingGuide}>
+                  読み方 {readingMode === 'furigana' ? 'ふりがな' : readingMode === 'romaji' ? 'ローマ字' : 'OFF'}
+                </button>
+              </div>
+            </>
+          ) : activeTrack === 'english' ? (
+            <>
+              <h1>English Lab</h1>
+              <p>Upper-intermediate English training for precise vocabulary, mature expression, close reading, and stronger writing.</p>
+              <div className="header-subline">
+                <span>Target: GEPT 中高級</span>
+                <span>Focus: Nuance, structure, and revision</span>
+                <span>Current module: {ENGLISH_TABS[activeEnglishTab]}</span>
+              </div>
+              <div className="header-actions">
+                <button className="cta-button cta-button--primary" onClick={() => openEnglishModule('expressions')}>
+                  Start With Expressions
+                </button>
+                <button className="cta-button" onClick={() => openEnglishModule('writing')}>
+                  Train Writing Upgrade
+                </button>
+                <button className="cta-button" onClick={() => openEnglishModule('vocabulary')}>
+                  Review Collocations
+                </button>
+                <button className="cta-button" onClick={() => openEnglishModule('reading')}>
+                  Open Reading Track
+                </button>
+              </div>
+            </>
+          ) : activeTrack === 'studio' ? (
+            <>
+              <h1>Content Studio</h1>
+              <p>Upload source material, normalize it, and turn it into lesson-ready content for both Japanese and English modules.</p>
+              <div className="header-subline">
+                <span>Input: JSON, CSV, TXT, MD</span>
+                <span>Output: normalized course content</span>
+                <span>Works for both Japanese and English</span>
+              </div>
+              <div className="header-actions">
+                <button className="cta-button cta-button--primary" onClick={() => setActiveTrack('studio')}>
+                  Open Upload Studio
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1>Scenario Studio</h1>
+              <p>Train real-world missions such as restaurants, stations, hotels, and service encounters through task flow, branch replies, and repair points.</p>
+              <div className="header-subline">
+                <span>Mode: task-based learning</span>
+                <span>Focus: mission, reply branches, repair</span>
+                <span>Supports Japanese and English</span>
+              </div>
+              <div className="header-actions">
+                <button className="cta-button cta-button--primary" onClick={() => setActiveTrack('scenario')}>
+                  Open Scenario Mode
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </header>
 
-      <section className="study-launch">
-        <article className="study-launch__card study-launch__card--primary">
-          <p className="study-launch__eyebrow">今日のおすすめ</p>
-          <h2>まずは N5 の文法から 3 件だけ見てみる</h2>
-          <p>最初から全部覚えなくて大丈夫です。1 セクションだけ見て、例文を 1 つ読むところから始めましょう。</p>
-          <button className="study-launch__button" onClick={() => openQuickStart('grammar', { grammarLevel: 'N5' })}>
-            文法へ
-          </button>
-        </article>
-        <article className="study-launch__card">
-          <p className="study-launch__eyebrow">前回の続き</p>
-          <h2>{continueLabel} を開く</h2>
-          <p>前回見ていた分野をそのまま開けます。学習を「毎回ゼロから」にしないのが続けるコツです。</p>
-          <button
-            className="study-launch__button"
-            onClick={() =>
-              openQuickStart(activeTab, {
-                grammarLevel: grammarFilter,
-                vocabularyLevel: vocabularyFilter.level,
-                vocabularyPos: vocabularyFilter.pos,
-                phraseCategory: phraseFilter,
-              })
-            }
-          >
-            続ける
-          </button>
-        </article>
-        <article className="study-launch__card">
-          <p className="study-launch__eyebrow">保存した項目</p>
-          <h2>{savedCount} 件を復習候補に保存済み</h2>
-          <p>気になった文法・語彙・フレーズを保存しておくと、次回はそこから復習できます。</p>
-          <button className="study-launch__button" onClick={() => setActiveTab('grammar')}>
-            保存しながら読む
-          </button>
-        </article>
-      </section>
+      <SpeechSettingsPanel />
 
-      <nav className="tab-navigation">
-        <button
-          className={`tab-btn ${activeTab === 'grammar' ? 'active' : ''}`}
-          onClick={() => setActiveTab('grammar')}
-        >
-          📝 文法
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'vocabulary' ? 'active' : ''}`}
-          onClick={() => setActiveTab('vocabulary')}
-        >
-          📖 語彙
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'phrases' ? 'active' : ''}`}
-          onClick={() => setActiveTab('phrases')}
-        >
-          💬 会話フレーズ
-        </button>
-      </nav>
+      {activeTrack === 'japanese' ? (
+        <>
+          <section className="study-launch">
+            <article className="study-launch__card study-launch__card--primary">
+              <p className="study-launch__eyebrow">今日のおすすめ</p>
+              <h2>まずは N5 の文法から 3 件だけ見てみる</h2>
+              <p>最初から全部覚えなくて大丈夫です。1 セクションだけ見て、例文を 1 つ読むところから始めましょう。</p>
+              <button className="study-launch__button" onClick={() => openJapaneseQuickStart('grammar', { grammarLevel: 'N5' })}>
+                文法へ
+              </button>
+            </article>
+            <article className="study-launch__card">
+              <p className="study-launch__eyebrow">前回の続き</p>
+              <h2>{continueLabel} を開く</h2>
+              <p>前回見ていた分野をそのまま開けます。学習を「毎回ゼロから」にしないのが続けるコツです。</p>
+              <button
+                className="study-launch__button"
+                onClick={() =>
+                  openJapaneseQuickStart(activeJapaneseTab, {
+                    grammarLevel: grammarFilter,
+                    vocabularyLevel: vocabularyFilter.level,
+                    vocabularyPos: vocabularyFilter.pos,
+                    phraseCategory: phraseFilter,
+                  })
+                }
+              >
+                続ける
+              </button>
+            </article>
+            <article className="study-launch__card">
+              <p className="study-launch__eyebrow">保存した項目</p>
+              <h2>{savedCount} 件を復習候補に保存済み</h2>
+              <p>気になった文法・語彙・フレーズを保存しておくと、次回はそこから復習できます。</p>
+              <button className="study-launch__button" onClick={() => setActiveJapaneseTab('grammar')}>
+                保存しながら読む
+              </button>
+            </article>
+          </section>
+
+          <nav className="tab-navigation">
+            <button
+              className={`tab-btn ${activeJapaneseTab === 'grammar' ? 'active' : ''}`}
+              onClick={() => setActiveJapaneseTab('grammar')}
+            >
+              文法
+            </button>
+            <button
+              className={`tab-btn ${activeJapaneseTab === 'vocabulary' ? 'active' : ''}`}
+              onClick={() => setActiveJapaneseTab('vocabulary')}
+            >
+              語彙
+            </button>
+            <button
+              className={`tab-btn ${activeJapaneseTab === 'phrases' ? 'active' : ''}`}
+              onClick={() => setActiveJapaneseTab('phrases')}
+            >
+              会話フレーズ
+            </button>
+          </nav>
+        </>
+      ) : null}
 
       <main className="app-main">
-        {loading && <div className="loading">読み込み中...</div>}
+        {loading && activeTrack === 'japanese' && <div className="loading">読み込み中...</div>}
 
-        {!loading && activeTab === 'grammar' && (
+        {!loading && activeTrack === 'japanese' && activeJapaneseTab === 'grammar' && (
           <GrammarBrowser
             data={grammarData}
             initialLevel={grammarFilter}
@@ -251,7 +361,7 @@ export default function App() {
           />
         )}
 
-        {!loading && activeTab === 'vocabulary' && (
+        {!loading && activeTrack === 'japanese' && activeJapaneseTab === 'vocabulary' && (
           <VocabularyBrowser
             initialLevel={vocabularyFilter.level}
             initialPos={vocabularyFilter.pos}
@@ -261,7 +371,7 @@ export default function App() {
           />
         )}
 
-        {!loading && activeTab === 'phrases' && (
+        {!loading && activeTrack === 'japanese' && activeJapaneseTab === 'phrases' && (
           <PhrasesLibrary
             initialCategory={phraseFilter}
             readingMode={readingMode}
@@ -269,17 +379,34 @@ export default function App() {
             onToggleSave={togglePhraseSaved}
           />
         )}
+
+        {activeTrack === 'english' && (
+          <EnglishLearningHub
+            activeTab={activeEnglishTab}
+            tabs={ENGLISH_TABS}
+            expressionsData={englishExpressions}
+            readingData={englishReadingPassages}
+            vocabularyData={englishVocabularySets}
+            writingData={englishWritingPoints}
+            overviewCards={englishOverviewCards}
+            moduleSummaries={englishModuleSummaries}
+            onSelectTab={openEnglishModule}
+          />
+        )}
+
+        {activeTrack === 'studio' && <ProtectedContentStudio />}
+
+        {activeTrack === 'scenario' && <ScenarioStudio />}
       </main>
 
       <footer className="app-footer">
-        <p>💡 会話学習に最適化 | 深く、速く、効率よく</p>
+        <p>{activeTrack === 'english' ? 'Language learning platform | Japanese and advanced English tracks' : activeTrack === 'studio' ? 'Content ingestion and lesson normalization workspace' : activeTrack === 'scenario' ? 'Task-based scenario learning for real-world language use' : '会話学習に最適化 | 深く、速く、効率よく'}</p>
         <p className="author-info">
-          作者：<strong>Grant, K. J. Huang, Ph.D. 黃冠叡</strong>
-          {' '}
-          <a href="mailto:guanruey@gmail.com">📧 聯絡</a>
+          作者：<strong>Grant, K. J. Huang, Ph.D. 黃冠叡</strong>{' '}
+          <a href="mailto:guanruey@gmail.com">聯絡</a>
         </p>
         <p className="copyright">
-          © 2025-2026 日本語学習プラットフォーム. All rights reserved.
+          © 2025-2026 Language Learning Platform. All rights reserved.
           <br />
           版權所有，保留所有權利。此網站內容可免費用於學習，禁止未經授權的商業或其他使用。
         </p>

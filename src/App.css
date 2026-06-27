@@ -40,6 +40,12 @@
   position: relative;
 }
 
+.app--english .app-header {
+  background:
+    radial-gradient(circle at top left, rgba(244, 199, 89, 0.24), transparent 30%),
+    linear-gradient(135deg, var(--accent-strong) 0%, var(--accent-soft) 100%);
+}
+
 .theme-toggle {
   position: absolute;
   top: 20px;
@@ -99,6 +105,31 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 18px;
+}
+
+.track-switch {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.track-switch__button {
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.track-switch__button.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 .cta-button,
@@ -280,6 +311,12 @@
 
   .header-actions {
     flex-direction: column;
+  }
+
+  .track-switch {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .cta-button,

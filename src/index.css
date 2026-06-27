@@ -7,6 +7,9 @@
 :root {
   --primary: #667eea;
   --secondary: #764ba2;
+  --accent-strong: #0b5d44;
+  --accent-soft: #2f7c63;
+  --ink-soft: #17362d;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -23,6 +26,9 @@
 [data-theme="dark"] {
   --primary: #667eea;
   --secondary: #764ba2;
+  --accent-strong: #5db497;
+  --accent-soft: #3f886f;
+  --ink-soft: #d8f0e7;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -38,6 +44,9 @@
 [data-theme="light"] {
   --primary: #667eea;
   --secondary: #764ba2;
+  --accent-strong: #0b5d44;
+  --accent-soft: #2f7c63;
+  --ink-soft: #17362d;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
