@@ -268,3 +268,72 @@
     grid-template-columns: 1fr;
   }
 }
+
+[data-theme="dark"] .scenario-studio__hero {
+  background:
+    radial-gradient(circle at top left, rgba(205, 150, 61, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .scenario-studio__eyebrow,
+[data-theme="dark"] .scenario-studio__label,
+[data-theme="dark"] .scenario-step__label {
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .scenario-studio__hero-card,
+[data-theme="dark"] .scenario-studio__card,
+[data-theme="dark"] .scenario-step,
+[data-theme="dark"] .scenario-repair,
+[data-theme="dark"] .scenario-example-group {
+  background: rgba(31, 41, 55, 0.86);
+  border-color: rgba(197, 109, 45, 0.22);
+}
+
+[data-theme="dark"] .scenario-studio__hero-card p {
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .scenario-studio__card--primary {
+  background: linear-gradient(180deg, rgba(82, 58, 43, 0.88), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .scenario-studio__meta span,
+[data-theme="dark"] .scenario-studio__chips span {
+  background: rgba(197, 109, 45, 0.16);
+  border-color: rgba(197, 109, 45, 0.24);
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .scenario-studio__chips--muted span {
+  background: rgba(111, 125, 152, 0.16);
+  border-color: rgba(111, 125, 152, 0.24);
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .scenario-example-group {
+  border-color: rgba(197, 109, 45, 0.18);
+}
+
+[data-theme="dark"] .scenario-step__index {
+  background: rgba(197, 109, 45, 0.16);
+  color: #f2d4bf;
+}
+
+[data-theme="dark"] .scenario-step blockquote {
+  border-left-color: #d99052;
+}
+
+[data-theme="dark"] .scenario-repair__weak {
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .scenario-repair__better {
+  color: #a7f3d0;
+}
+
+[data-theme="dark"] .scenario-speak-btn {
+  border-color: rgba(197, 109, 45, 0.24);
+  background: rgba(197, 109, 45, 0.16);
+  color: #f2d4bf;
+}
