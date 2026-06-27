@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { scenarioModules, scenarioTracks } from '../data/scenarioContent'
+import { scenarioCategories, scenarioModules, scenarioTracks } from '../data/scenarioContent'
 import { speak } from '../utils/speech'
 import './ScenarioStudio.css'
 
@@ -24,11 +24,23 @@ function SpeakButton({ text, language }) {
 
 export default function ScenarioStudio() {
   const [language, setLanguage] = useState('japanese')
-  const [scenarioId, setScenarioId] = useState(scenarioModules[0]?.id || null)
+  const [activeCategory, setActiveCategory] = useState('daily')
+  const [scenarioId, setScenarioId] = useState(
+    () => scenarioModules.find((item) => item.category === 'daily')?.id || scenarioModules[0]?.id || null
+  )
+
+  const categoryModules = useMemo(
+    () => scenarioModules.filter((item) => item.category === activeCategory),
+    [activeCategory]
+  )
+
+  const safeScenarioId = categoryModules.some((item) => item.id === scenarioId)
+    ? scenarioId
+    : categoryModules[0]?.id || null
 
   const activeScenario = useMemo(
-    () => scenarioModules.find((item) => item.id === scenarioId) || scenarioModules[0],
-    [scenarioId]
+    () => categoryModules.find((item) => item.id === safeScenarioId) || categoryModules[0] || scenarioModules[0],
+    [categoryModules, safeScenarioId]
   )
 
   const content = activeScenario.languages[language]
@@ -55,6 +67,22 @@ export default function ScenarioStudio() {
       </div>
 
       <div className="scenario-studio__toolbar">
+        <div className="scenario-studio__categories">
+          {Object.entries(scenarioCategories).map(([key, label]) => (
+            <button
+              key={key}
+              className={activeCategory === key ? 'is-active' : ''}
+              onClick={() => {
+                setActiveCategory(key)
+                const nextScenario = scenarioModules.find((item) => item.category === key)
+                if (nextScenario) setScenarioId(nextScenario.id)
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         <div className="scenario-studio__toggle">
           {Object.entries(scenarioTracks).map(([key, label]) => (
             <button
@@ -68,10 +96,10 @@ export default function ScenarioStudio() {
         </div>
 
         <div className="scenario-studio__scenarios">
-          {scenarioModules.map((scenario) => (
+          {categoryModules.map((scenario) => (
             <button
               key={scenario.id}
-              className={scenarioId === scenario.id ? 'is-active' : ''}
+              className={safeScenarioId === scenario.id ? 'is-active' : ''}
               onClick={() => setScenarioId(scenario.id)}
             >
               {scenario.label}

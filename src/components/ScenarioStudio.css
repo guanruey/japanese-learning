@@ -66,6 +66,7 @@
 }
 
 .scenario-studio__toolbar,
+.scenario-studio__categories,
 .scenario-studio__toggle,
 .scenario-studio__scenarios,
 .scenario-studio__chips,
@@ -75,6 +76,7 @@
   gap: 10px;
 }
 
+.scenario-studio__categories button,
 .scenario-studio__toggle button,
 .scenario-studio__scenarios button {
   border-radius: 999px;
@@ -85,6 +87,7 @@
   font-weight: 700;
 }
 
+.scenario-studio__categories button.is-active,
 .scenario-studio__toggle button.is-active,
 .scenario-studio__scenarios button.is-active {
   background: #9a5a1d;
@@ -273,6 +276,21 @@
   background:
     radial-gradient(circle at top left, rgba(205, 150, 61, 0.12), transparent 32%),
     linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
+}
+
+[data-theme="dark"] .scenario-studio__categories button,
+[data-theme="dark"] .scenario-studio__toggle button,
+[data-theme="dark"] .scenario-studio__scenarios button {
+  background: rgba(31, 41, 55, 0.86);
+  border-color: rgba(111, 125, 152, 0.3);
+}
+
+[data-theme="dark"] .scenario-studio__categories button.is-active,
+[data-theme="dark"] .scenario-studio__toggle button.is-active,
+[data-theme="dark"] .scenario-studio__scenarios button.is-active {
+  background: #9a5a1d;
+  border-color: #9a5a1d;
+  color: white;
 }
 
 [data-theme="dark"] .scenario-studio__eyebrow,
