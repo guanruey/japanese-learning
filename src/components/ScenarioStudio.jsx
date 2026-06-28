@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { scenarioCategories, scenarioModules, scenarioTracks } from '../data/scenarioContent'
 import { speak } from '../utils/speech'
 import './ScenarioStudio.css'
@@ -22,6 +22,118 @@ function SpeakButton({ text, language }) {
   )
 }
 
+function PracticeMode({ steps, responseBank, language, onExit }) {
+  const [idx, setIdx] = useState(0)
+  const [chosen, setChosen] = useState(null)
+  const [score, setScore] = useState(0)
+
+  const done = idx >= steps.length
+  const step = steps[idx]
+
+  const choices = useMemo(() => {
+    if (!step) return []
+    const pool = [
+      ...steps.filter((_, i) => i !== idx).map(s => s.learnerLine),
+      ...(responseBank || []),
+    ].filter(d => d !== step.learnerLine)
+
+    const halfLen = Math.max(1, Math.floor(pool.length / 2))
+    const d1 = pool[idx % pool.length] ?? ''
+    const d2 = pool[(idx + halfLen) % pool.length] ?? ''
+    const unique = [step.learnerLine, d1, d2].filter((v, i, a) => a.indexOf(v) === i)
+    // Place correct answer at position (idx % 3) by rotating
+    const pos = idx % Math.min(3, unique.length)
+    const withoutCorrect = unique.filter(v => v !== step.learnerLine)
+    withoutCorrect.splice(pos, 0, step.learnerLine)
+    return withoutCorrect.slice(0, 3)
+  }, [idx, step, steps, responseBank])
+
+  const advance = () => { setIdx(i => i + 1); setChosen(null) }
+  const restart = () => { setIdx(0); setChosen(null); setScore(0) }
+
+  if (done) {
+    return (
+      <div className="practice-done">
+        <p className="practice-done__score">{score} / {steps.length}</p>
+        <p className="practice-done__label">
+          {score === steps.length ? '全部答對！' : score >= steps.length / 2 ? '不錯，再練一次更熟練。' : '繼續練習，你可以的。'}
+        </p>
+        <div className="practice-done__actions">
+          <button className="practice-btn practice-btn--primary" onClick={restart}>再練一次</button>
+          <button className="practice-btn" onClick={onExit}>返回閱讀模式</button>
+        </div>
+      </div>
+    )
+  }
+
+  const isAnswered = chosen !== null
+  const correct = step.learnerLine
+
+  return (
+    <div className="practice-view">
+      <div className="practice-progress">
+        <span>步驟 {idx + 1} / {steps.length}</span>
+        <span className="practice-score-label">答對 {score} 題</span>
+      </div>
+
+      <h3 className="practice-step-title">{step.title}</h3>
+      {step.coachNote && <p className="practice-coach">{step.coachNote}</p>}
+
+      <p className="practice-prompt">你會怎麼說？</p>
+
+      <div className="practice-choices">
+        {choices.map((c, i) => {
+          let cls = 'practice-choice'
+          if (isAnswered) {
+            if (c === correct) cls += ' is-correct'
+            else if (i === chosen) cls += ' is-wrong'
+          }
+          return (
+            <div key={i} className={cls}>
+              <SpeakButton text={c} language={language} />
+              <button
+                className="practice-choice__text"
+                disabled={isAnswered}
+                onClick={() => {
+                  setChosen(i)
+                  if (c === correct) setScore(s => s + 1)
+                }}
+              >
+                {c}
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      {isAnswered && (
+        <div className="practice-reveal">
+          <p className={`practice-verdict ${chosen !== null && choices[chosen] === correct ? 'is-correct' : 'is-wrong'}`}>
+            {choices[chosen] === correct ? '✓ 正確！' : `✗ 正確答案：${correct}`}
+          </p>
+          <div className="scenario-step__block">
+            <p className="scenario-step__label">對方可能回應</p>
+            <ul>
+              {step.branches.map(b => (
+                <li key={b} className="scenario-step__reply">
+                  <span>{b}</span>
+                  <SpeakButton text={b} language={language} />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button
+            className="practice-btn practice-btn--primary practice-next"
+            onClick={advance}
+          >
+            {idx < steps.length - 1 ? '下一步 →' : '查看結果'}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function ScenarioStudio({
   language: controlledLanguage,
   activeCategory: controlledCategory,
@@ -33,25 +145,23 @@ export default function ScenarioStudio({
   const [scenarioId, setScenarioId] = useState(
     () => scenarioModules.find((item) => item.category === 'daily')?.id || scenarioModules[0]?.id || null
   )
+  const [mode, setMode] = useState('review') // 'review' | 'practice'
 
   const language = controlledLanguage || internalLanguage
   const activeCategory = controlledCategory || internalCategory
 
   const setLanguage = (nextLanguage) => {
-    if (onLanguageChange) {
-      onLanguageChange(nextLanguage)
-      return
-    }
+    if (onLanguageChange) { onLanguageChange(nextLanguage); return }
     setInternalLanguage(nextLanguage)
   }
 
   const setActiveCategory = (nextCategory) => {
-    if (onCategoryChange) {
-      onCategoryChange(nextCategory)
-      return
-    }
+    if (onCategoryChange) { onCategoryChange(nextCategory); return }
     setInternalCategory(nextCategory)
   }
+
+  // Reset practice mode when scenario or language changes
+  useEffect(() => { setMode('review') }, [scenarioId, language])
 
   const categoryModules = useMemo(
     () => scenarioModules.filter((item) => item.category === activeCategory),
@@ -68,6 +178,7 @@ export default function ScenarioStudio({
   )
 
   const content = activeScenario.languages[language]
+  const hasSteps = content.steps.length > 0
 
   return (
     <section className="scenario-studio">
@@ -186,41 +297,72 @@ export default function ScenarioStudio({
       </section>
 
       <section className="scenario-studio__card">
-        <p className="scenario-studio__label">Scenario flow</p>
-        <p className="scenario-studio__opener">{content.opener}</p>
-        <div className="scenario-studio__steps">
-          {content.steps.length > 0 ? (
-            content.steps.map((step, index) => (
-              <article key={step.title} className="scenario-step">
-                <div className="scenario-step__index">{index + 1}</div>
-                <div className="scenario-step__body">
-                  <h3>{step.title}</h3>
-                  <div className="scenario-step__block">
-                    <p className="scenario-step__label">Your line</p>
-                    <div className="scenario-step__quote-row">
-                      <blockquote>{step.learnerLine}</blockquote>
-                      <SpeakButton text={step.learnerLine} language={language} />
-                    </div>
-                  </div>
-                  <div className="scenario-step__block">
-                    <p className="scenario-step__label">Likely replies</p>
-                    <ul>
-                      {step.branches.map((branch) => (
-                        <li key={branch} className="scenario-step__reply">
-                          <span>{branch}</span>
-                          <SpeakButton text={branch} language={language} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <p className="scenario-step__note">{step.coachNote}</p>
-                </div>
-              </article>
-            ))
-          ) : (
-            <div className="scenario-studio__empty">This scenario shell is ready. Next we can fill in the full step chain like the restaurant demo.</div>
+        <div className="scenario-flow__header">
+          <p className="scenario-studio__label">Scenario flow</p>
+          {hasSteps && (
+            <div className="scenario-mode-toggle">
+              <button
+                className={mode === 'review' ? 'is-active' : ''}
+                onClick={() => setMode('review')}
+              >
+                閱讀
+              </button>
+              <button
+                className={mode === 'practice' ? 'is-active' : ''}
+                onClick={() => setMode('practice')}
+              >
+                練習
+              </button>
+            </div>
           )}
         </div>
+
+        {mode === 'practice' && hasSteps ? (
+          <PracticeMode
+            key={`${safeScenarioId}-${language}`}
+            steps={content.steps}
+            responseBank={content.responseBank}
+            language={language}
+            onExit={() => setMode('review')}
+          />
+        ) : (
+          <>
+            <p className="scenario-studio__opener">{content.opener}</p>
+            <div className="scenario-studio__steps">
+              {content.steps.length > 0 ? (
+                content.steps.map((step, index) => (
+                  <article key={step.title} className="scenario-step">
+                    <div className="scenario-step__index">{index + 1}</div>
+                    <div className="scenario-step__body">
+                      <h3>{step.title}</h3>
+                      <div className="scenario-step__block">
+                        <p className="scenario-step__label">Your line</p>
+                        <div className="scenario-step__quote-row">
+                          <blockquote>{step.learnerLine}</blockquote>
+                          <SpeakButton text={step.learnerLine} language={language} />
+                        </div>
+                      </div>
+                      <div className="scenario-step__block">
+                        <p className="scenario-step__label">Likely replies</p>
+                        <ul>
+                          {step.branches.map((branch) => (
+                            <li key={branch} className="scenario-step__reply">
+                              <span>{branch}</span>
+                              <SpeakButton text={branch} language={language} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <p className="scenario-step__note">{step.coachNote}</p>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="scenario-studio__empty">This scenario shell is ready. Next we can fill in the full step chain like the restaurant demo.</div>
+              )}
+            </div>
+          </>
+        )}
       </section>
 
       <section className="scenario-studio__card">

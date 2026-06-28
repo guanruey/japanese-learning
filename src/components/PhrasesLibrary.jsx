@@ -68,7 +68,7 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
       <div className="browser-controls">
         <input
           type="text"
-          placeholder="フレーズを検索（例：ありがとう、いくら）"
+          placeholder="搜尋句型（例：ありがとう、謝謝、購物）"
           className="search-input"
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
@@ -87,7 +87,7 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
       </div>
 
       <div className="results-info">
-        <p>{filtered.length} 件見つかりました</p>
+        <p>共 {filtered.length} 個句型</p>
       </div>
 
       <div className="phrase-cards">

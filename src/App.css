@@ -237,6 +237,17 @@
   border-color: var(--primary);
 }
 
+.tab-btn--reading {
+  margin-left: auto;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  opacity: 0.75;
+}
+
+.tab-btn--reading:hover {
+  opacity: 1;
+}
+
 .app-main {
   flex: 1;
   padding: 30px 20px;

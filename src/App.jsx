@@ -9,6 +9,7 @@ import ScenarioStudio from './components/ScenarioStudio'
 import SpeechSettingsPanel from './components/SpeechSettingsPanel'
 import DailyPhrase from './components/DailyPhrase'
 import SiteMap from './components/SiteMap'
+import SavedReview from './components/SavedReview'
 import { grammarReadings } from './data/generatedReadings'
 import { grammarOverrides } from './data/grammarOverrides'
 import { ENGLISH_TABS, englishExpressions, englishModuleSummaries, englishOverviewCards, englishReadingPassages, englishVocabularySets, englishWritingPoints } from './data/englishContent'
@@ -31,6 +32,7 @@ const JAPANESE_TAB_LABELS = {
   grammar: '文法',
   vocabulary: '語彙',
   phrases: '会話フレーズ',
+  saved: '已保存',
 }
 
 function loadStoredValue(key, fallback) {
@@ -220,25 +222,6 @@ export default function App() {
             <>
               <h1>日本語学習プラットフォーム</h1>
               <p>JLPT N5 / N4 の文法・語彙・会話を、毎回ちょっとずつ積み上げるための学習サイト</p>
-              <div className="header-subline">
-                <span>今日の入口: {continueLabel}</span>
-                <span>保存済み: {savedCount} 件</span>
-                <span>前回の続き: {continueLabel}</span>
-              </div>
-              <div className="header-actions">
-                <button className="cta-button cta-button--primary" onClick={() => openJapaneseQuickStart('grammar', { grammarLevel: 'N5' })}>
-                  今日 10 分で文法
-                </button>
-                <button className="cta-button" onClick={() => openJapaneseQuickStart('vocabulary', { vocabularyLevel: 'N5', vocabularyPos: 'noun' })}>
-                  語彙から始める
-                </button>
-                <button className="cta-button" onClick={() => openJapaneseQuickStart('phrases', { phraseCategory: '問候' })}>
-                  会話フレーズを練習
-                </button>
-                <button className="cta-button" onClick={cycleReadingGuide}>
-                  読み方 {readingMode === 'furigana' ? 'ふりがな' : readingMode === 'romaji' ? 'ローマ字' : 'OFF'}
-                </button>
-              </div>
             </>
           ) : activeTrack === 'english' ? (
             <>
@@ -328,23 +311,14 @@ export default function App() {
           </div>
 
           <nav className="tab-navigation">
-            <button
-              className={`tab-btn ${activeJapaneseTab === 'grammar' ? 'active' : ''}`}
-              onClick={() => setActiveJapaneseTab('grammar')}
-            >
-              文法
+            <button className={`tab-btn ${activeJapaneseTab === 'grammar' ? 'active' : ''}`} onClick={() => setActiveJapaneseTab('grammar')}>文法</button>
+            <button className={`tab-btn ${activeJapaneseTab === 'vocabulary' ? 'active' : ''}`} onClick={() => setActiveJapaneseTab('vocabulary')}>語彙</button>
+            <button className={`tab-btn ${activeJapaneseTab === 'phrases' ? 'active' : ''}`} onClick={() => setActiveJapaneseTab('phrases')}>会話フレーズ</button>
+            <button className={`tab-btn ${activeJapaneseTab === 'saved' ? 'active' : ''}`} onClick={() => setActiveJapaneseTab('saved')}>
+              已保存{savedCount > 0 ? ` (${savedCount})` : ''}
             </button>
-            <button
-              className={`tab-btn ${activeJapaneseTab === 'vocabulary' ? 'active' : ''}`}
-              onClick={() => setActiveJapaneseTab('vocabulary')}
-            >
-              語彙
-            </button>
-            <button
-              className={`tab-btn ${activeJapaneseTab === 'phrases' ? 'active' : ''}`}
-              onClick={() => setActiveJapaneseTab('phrases')}
-            >
-              会話フレーズ
+            <button className="tab-btn tab-btn--reading" onClick={cycleReadingGuide}>
+              読み方 {readingMode === 'furigana' ? 'ふりがな' : readingMode === 'romaji' ? 'ローマ字' : 'OFF'}
             </button>
           </nav>
         </>
@@ -379,6 +353,19 @@ export default function App() {
             readingMode={readingMode}
             savedIds={savedPhraseIds}
             onToggleSave={togglePhraseSaved}
+          />
+        )}
+
+        {activeTrack === 'japanese' && activeJapaneseTab === 'saved' && (
+          <SavedReview
+            grammarData={grammarData || []}
+            savedGrammarIds={savedGrammarIds}
+            savedVocabularyIds={savedVocabularyIds}
+            savedPhraseIds={savedPhraseIds}
+            readingMode={readingMode}
+            onToggleGrammarSave={toggleGrammarSaved}
+            onToggleVocabSave={toggleVocabularySaved}
+            onTogglePhraseSave={togglePhraseSaved}
           />
         )}
 
