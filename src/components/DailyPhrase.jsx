@@ -32,16 +32,16 @@ function computeStreak(dates, today) {
   return streak
 }
 
-export default function DailyPhrase({ savedPhraseIds = [], readingMode = 'furigana' }) {
+export default function DailyPhrase({ savedPhraseIds = [], readingMode = 'furigana', onExplore }) {
   const [dates, setDates] = useState(() => {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [] } catch { return [] }
   })
+  const [open, setOpen] = useState(false)
 
   const today = getTodayStr()
   const doneToday = dates.includes(today)
   const streak = computeStreak(dates, today)
 
-  // Prefer saved phrases; fall back to starter phrases
   let pool = STARTER_PHRASES
   if (savedPhraseIds.length > 0) {
     const saved = fallbackPhrases.filter(p =>
@@ -56,15 +56,52 @@ export default function DailyPhrase({ savedPhraseIds = [], readingMode = 'furiga
     const next = [...dates, today]
     setDates(next)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    setOpen(false)
   }
 
   if (!phrase) return null
 
+  // Completed state — compact bar
+  if (doneToday) {
+    return (
+      <div className="daily-phrase daily-phrase--done daily-phrase--compact">
+        <span className="daily-phrase__done-mark">✓</span>
+        <span className="daily-phrase__done-text">
+          今日任務完成
+          {streak >= 2 && <span className="daily-phrase__streak"> · 連續 {streak} 天</span>}
+        </span>
+        <button className="daily-phrase__explore-btn" onClick={onExplore}>
+          繼續探索 ↓
+        </button>
+      </div>
+    )
+  }
+
+  // Idle state — start button
+  if (!open) {
+    return (
+      <div className="daily-phrase daily-phrase--idle">
+        <div className="daily-phrase__idle-left">
+          <span className="daily-phrase__label">今日任務</span>
+          {streak > 0 && <span className="daily-phrase__streak">連續 {streak} 天</span>}
+          <p className="daily-phrase__tagline">每天開啟一句，就是學習的開始</p>
+        </div>
+        <button className="daily-phrase__start-btn" onClick={() => setOpen(true)}>
+          開始今日學習 →
+        </button>
+      </div>
+    )
+  }
+
+  // Open state — phrase + done button
   return (
-    <div className={`daily-phrase${doneToday ? ' daily-phrase--done' : ''}`}>
+    <div className="daily-phrase daily-phrase--open">
       <div className="daily-phrase__header">
-        <span className="daily-phrase__label">今日一句</span>
-        {streak > 0 && <span className="daily-phrase__streak">連續 {streak} 天</span>}
+        <div className="daily-phrase__header-left">
+          <span className="daily-phrase__label">今日任務</span>
+          {streak > 0 && <span className="daily-phrase__streak">連續 {streak} 天</span>}
+        </div>
+        <button className="daily-phrase__close" onClick={() => setOpen(false)} aria-label="關閉">×</button>
       </div>
 
       <div className="daily-phrase__body">
@@ -77,22 +114,19 @@ export default function DailyPhrase({ savedPhraseIds = [], readingMode = 'furiga
           </p>
           <p className="daily-phrase__zh">{phrase.meaning_zh}</p>
           {phrase.context && <p className="daily-phrase__ctx">{phrase.context}</p>}
+          {phrase.example && (
+            <p className="daily-phrase__example">
+              <FuriganaText text={phrase.example} reading={phrase.example_reading} mode={readingMode} />
+            </p>
+          )}
         </div>
       </div>
 
       <div className="daily-phrase__footer">
-        <button
-          className={`daily-phrase__btn${doneToday ? ' is-done' : ''}`}
-          onClick={markDone}
-          disabled={doneToday}
-        >
-          {doneToday ? '✓ 今天學完了' : '今天學完了'}
+        <button className="daily-phrase__done-btn" onClick={markDone}>
+          今天學完了
         </button>
-        {doneToday && (
-          <span className="daily-phrase__note">
-            {streak >= 2 ? `連續 ${streak} 天，繼續保持！` : '第一天打卡，明天繼續。'}
-          </span>
-        )}
+        <span className="daily-phrase__hint">完成後可繼續探索網站內容</span>
       </div>
     </div>
   )

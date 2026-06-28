@@ -8,6 +8,7 @@ import ProtectedContentStudio from './components/ProtectedContentStudio'
 import ScenarioStudio from './components/ScenarioStudio'
 import SpeechSettingsPanel from './components/SpeechSettingsPanel'
 import DailyPhrase from './components/DailyPhrase'
+import SiteMap from './components/SiteMap'
 import { grammarReadings } from './data/generatedReadings'
 import { grammarOverrides } from './data/grammarOverrides'
 import { ENGLISH_TABS, englishExpressions, englishModuleSummaries, englishOverviewCards, englishReadingPassages, englishVocabularySets, englishWritingPoints } from './data/englishContent'
@@ -310,43 +311,21 @@ export default function App() {
 
       {activeTrack === 'japanese' ? (
         <>
-          <DailyPhrase savedPhraseIds={savedPhraseIds} readingMode={readingMode} />
-          <section className="study-launch">
-            <article className="study-launch__card study-launch__card--primary">
-              <p className="study-launch__eyebrow">今日のおすすめ</p>
-              <h2>まずは N5 の文法から 3 件だけ見てみる</h2>
-              <p>最初から全部覚えなくて大丈夫です。1 セクションだけ見て、例文を 1 つ読むところから始めましょう。</p>
-              <button className="study-launch__button" onClick={() => openJapaneseQuickStart('grammar', { grammarLevel: 'N5' })}>
-                文法へ
-              </button>
-            </article>
-            <article className="study-launch__card">
-              <p className="study-launch__eyebrow">前回の続き</p>
-              <h2>{continueLabel} を開く</h2>
-              <p>前回見ていた分野をそのまま開けます。学習を「毎回ゼロから」にしないのが続けるコツです。</p>
-              <button
-                className="study-launch__button"
-                onClick={() =>
-                  openJapaneseQuickStart(activeJapaneseTab, {
-                    grammarLevel: grammarFilter,
-                    vocabularyLevel: vocabularyFilter.level,
-                    vocabularyPos: vocabularyFilter.pos,
-                    phraseCategory: phraseFilter,
-                  })
-                }
-              >
-                続ける
-              </button>
-            </article>
-            <article className="study-launch__card">
-              <p className="study-launch__eyebrow">保存した項目</p>
-              <h2>{savedCount} 件を復習候補に保存済み</h2>
-              <p>気になった文法・語彙・フレーズを保存しておくと、次回はそこから復習できます。</p>
-              <button className="study-launch__button" onClick={() => setActiveJapaneseTab('grammar')}>
-                保存しながら読む
-              </button>
-            </article>
-          </section>
+          <DailyPhrase
+            savedPhraseIds={savedPhraseIds}
+            readingMode={readingMode}
+            onExplore={() => document.getElementById('sitemap-anchor')?.scrollIntoView({ behavior: 'smooth' })}
+          />
+          <div id="sitemap-anchor">
+            <SiteMap
+              onNavigate={(track, tab) => {
+                setActiveTrack(track)
+                if (track === 'japanese' && tab) setActiveJapaneseTab(tab)
+                if (track === 'english' && tab) setActiveEnglishTab(tab)
+                setTimeout(() => document.querySelector('.app-main')?.scrollIntoView({ behavior: 'smooth' }), 50)
+              }}
+            />
+          </div>
 
           <nav className="tab-navigation">
             <button
