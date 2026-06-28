@@ -7,6 +7,7 @@ import EnglishLearningHub from './components/EnglishLearningHub'
 import ProtectedContentStudio from './components/ProtectedContentStudio'
 import ScenarioStudio from './components/ScenarioStudio'
 import SpeechSettingsPanel from './components/SpeechSettingsPanel'
+import DailyPhrase from './components/DailyPhrase'
 import { grammarReadings } from './data/generatedReadings'
 import { grammarOverrides } from './data/grammarOverrides'
 import { ENGLISH_TABS, englishExpressions, englishModuleSummaries, englishOverviewCards, englishReadingPassages, englishVocabularySets, englishWritingPoints } from './data/englishContent'
@@ -309,6 +310,7 @@ export default function App() {
 
       {activeTrack === 'japanese' ? (
         <>
+          <DailyPhrase savedPhraseIds={savedPhraseIds} readingMode={readingMode} />
           <section className="study-launch">
             <article className="study-launch__card study-launch__card--primary">
               <p className="study-launch__eyebrow">今日のおすすめ</p>
