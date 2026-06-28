@@ -216,18 +216,176 @@ export const scenarioModules = [
       japanese: {
         opener: '車站情境特別需要「確認資訊」的能力，因為資訊量多且回覆可能很快。',
         mission: '你要去另一個城市，想問月台、發車時間，還要確認是否需要換車。',
-        keyPatterns: ['この電車は台北まで行きますか。', '何番線ですか。', '乗り換えは必要ですか。', '片道はいくらですか。'],
+        keyPatterns: ['この電車は新大阪まで行きますか。', '何番線ですか。', '乗り換えは必要ですか。', '片道はいくらですか。'],
         keyVocabulary: ['番線', '乗り換え', '片道', '往復', '快速'],
-        steps: [],
-        repairPoints: [],
+        exampleSets: [
+          {
+            title: '詢問月台與時刻',
+            lines: [
+              'この電車は新大阪まで行きますか。',
+              '何番線から出発しますか。',
+              '次の電車は何時ですか。',
+              '自由席はありますか。',
+            ],
+          },
+          {
+            title: '確認換車資訊',
+            lines: [
+              '乗り換えは必要ですか。',
+              'どこで乗り換えればいいですか。',
+              '乗り換えの時間はどのくらいありますか。',
+              '同じホームで乗り換えられますか。',
+            ],
+          },
+          {
+            title: '購票與票種',
+            lines: [
+              '片道一枚お願いします。',
+              '往復で買ったほうがお得ですか。',
+              '指定席をお願いします。',
+              '学割はありますか。',
+            ],
+          },
+        ],
+        responseBank: [
+          '三番線からです。',
+          '乗り換えが一回あります。',
+          '次の電車は十五時三十分発です。',
+          '片道は千八百円です。',
+          '自由席は後ろの車両です。',
+          '乗り換えは名古屋駅です。',
+        ],
+        steps: [
+          {
+            title: '確認月台',
+            learnerLine: '新大阪行きの電車は何番線ですか。',
+            coachNote: '把目的地放進句子裡，服務人員比較容易確認你要搭的方向。',
+            branches: [
+              '三番線からです。',
+              '一番線です。少し急いでください。',
+              '表示板でご確認ください。',
+            ],
+          },
+          {
+            title: '詢問換車',
+            learnerLine: '乗り換えは必要ですか。どこで乗り換えればいいですか。',
+            coachNote: '兩個問題可以連問，效率較高，但語速不要太快。',
+            branches: [
+              '名古屋で一度乗り換えがあります。',
+              'この電車は直通です。',
+              '乗り換えは同じホームです。',
+            ],
+          },
+          {
+            title: '購票',
+            learnerLine: '片道一枚お願いします。指定席はありますか。',
+            coachNote: '先說票種（片道／往復）再問席種，店員可以連著幫你確認。',
+            branches: [
+              '指定席は追加料金が必要です。',
+              '自由席でよろしいですか。',
+              '次の便の指定席になりますがよろしいですか。',
+            ],
+          },
+        ],
+        repairPoints: [
+          {
+            weak: '新大阪、何番？',
+            better: '新大阪行きは何番線ですか。',
+            why: '加上「行き」說明目的地，再補完疑問句型，讓服務人員更快理解你的需求。',
+          },
+          {
+            weak: '換車どこ？',
+            better: 'どこで乗り換えればいいですか。',
+            why: '條件型「〜ればいいですか」讓問法更自然，也比直接問「どこ」更有禮貌。',
+          },
+        ],
       },
       english: {
-        opener: 'Station tasks are useful because they force short, precise question forms.',
+        opener: 'Station tasks are useful because they force short, precise question forms. Every sentence should carry one clear piece of information.',
         mission: 'You need to ask which platform to use, when the train leaves, and whether you need to transfer.',
-        keyPatterns: ['Does this train go to Taichung.', 'Which platform should I go to.', 'Do I need to transfer.', 'How much is a one-way ticket.'],
+        keyPatterns: ['Does this train go to Taichung.', 'Which platform does it leave from.', 'Do I need to transfer.', 'One one-way ticket to Taichung, please.'],
         keyVocabulary: ['platform', 'departure', 'transfer', 'one-way', 'express'],
-        steps: [],
-        repairPoints: [],
+        exampleSets: [
+          {
+            title: 'Finding the platform',
+            lines: [
+              'Does this train go to Taichung.',
+              'Which platform does it leave from.',
+              'What time is the next train.',
+              'Is there a direct train.',
+            ],
+          },
+          {
+            title: 'Transfer questions',
+            lines: [
+              'Do I need to transfer.',
+              'Where do I transfer.',
+              'How much time do I have for the transfer.',
+              'Is the transfer on the same platform.',
+            ],
+          },
+          {
+            title: 'Buying a ticket',
+            lines: [
+              'One one-way ticket to Taichung, please.',
+              'Is a round trip cheaper.',
+              'I would like a reserved seat, please.',
+              'Do you have an express option.',
+            ],
+          },
+        ],
+        responseBank: [
+          'It leaves from Platform 3.',
+          'You will need to transfer once at Hsinchu.',
+          'The next train is at 3:30 PM.',
+          'A one-way ticket is 240 dollars.',
+          'There is a direct express at 4:00.',
+          'The transfer is on the same platform.',
+        ],
+        steps: [
+          {
+            title: 'Finding the right platform',
+            learnerLine: 'Does this train go to Taichung. Which platform does it leave from.',
+            coachNote: 'Combine the destination check and the platform question — it saves a round trip with the agent.',
+            branches: [
+              'Platform 3, all the way down the hall.',
+              'This train goes to Taipei, not Taichung.',
+              'The display board will show the platform about 10 minutes before departure.',
+            ],
+          },
+          {
+            title: 'Asking about transfers',
+            learnerLine: 'Do I need to transfer. If so, where.',
+            coachNote: '"If so, where" is compact and natural. It works in most follow-up questions.',
+            branches: [
+              'You will need to transfer once at Hsinchu.',
+              'This train is direct to Taichung.',
+              'Transfer at Taichung — it is the same platform.',
+            ],
+          },
+          {
+            title: 'Buying a ticket',
+            learnerLine: 'One one-way ticket to Taichung, please. Is there a reserved seat option.',
+            coachNote: 'State quantity, direction, and destination before asking about options.',
+            branches: [
+              'Reserved seats are available for the 4:05. Would you like one.',
+              'Would you like the 3:30 or the 4:05.',
+              'Seat selection is on the screen. Tap your preference.',
+            ],
+          },
+        ],
+        repairPoints: [
+          {
+            weak: 'I go Taichung, which platform.',
+            better: 'Which platform does the Taichung train leave from.',
+            why: 'The improved version puts the destination inside the question form instead of tacking it on as a statement first.',
+          },
+          {
+            weak: 'Need change train.',
+            better: 'Do I need to transfer.',
+            why: '"Transfer" is the standard English term for changing trains — using it makes the question instantly clear to any station agent.',
+          },
+        ],
       },
     },
   },

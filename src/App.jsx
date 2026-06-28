@@ -17,6 +17,8 @@ const STORAGE_KEYS = {
   activeTrack: 'language-learning-active-track',
   japaneseTab: 'japanese-learning-active-tab',
   englishTab: 'english-learning-active-tab',
+  scenarioLanguage: 'scenario-learning-language',
+  scenarioCategory: 'scenario-learning-category',
   readingGuide: 'japanese-learning-reading-guide',
   grammarSaved: 'japanese-learning-saved-grammar',
   vocabularySaved: 'japanese-learning-saved-vocabulary',
@@ -59,6 +61,8 @@ export default function App() {
   const [activeTrack, setActiveTrack] = useState(() => localStorage.getItem(STORAGE_KEYS.activeTrack) || 'japanese')
   const [activeJapaneseTab, setActiveJapaneseTab] = useState(() => localStorage.getItem(STORAGE_KEYS.japaneseTab) || 'grammar')
   const [activeEnglishTab, setActiveEnglishTab] = useState(() => localStorage.getItem(STORAGE_KEYS.englishTab) || 'expressions')
+  const [scenarioLanguage, setScenarioLanguage] = useState(() => localStorage.getItem(STORAGE_KEYS.scenarioLanguage) || 'japanese')
+  const [scenarioCategory, setScenarioCategory] = useState(() => localStorage.getItem(STORAGE_KEYS.scenarioCategory) || 'daily')
   const [grammarData, setGrammarData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [theme, setTheme] = useState('light')
@@ -102,6 +106,14 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.englishTab, activeEnglishTab)
   }, [activeEnglishTab])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.scenarioLanguage, scenarioLanguage)
+  }, [scenarioLanguage])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.scenarioCategory, scenarioCategory)
+  }, [scenarioCategory])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.readingGuide, readingMode)
@@ -271,12 +283,21 @@ export default function App() {
               <p>Train real-world missions such as restaurants, stations, hotels, and service encounters through task flow, branch replies, and repair points.</p>
               <div className="header-subline">
                 <span>Mode: task-based learning</span>
-                <span>Focus: mission, reply branches, repair</span>
-                <span>Supports Japanese and English</span>
+                <span>Language: {scenarioLanguage === 'japanese' ? '日本語' : 'English'}</span>
+                <span>Category: {scenarioCategory === 'daily' ? '常用場景' : '公司商務'}</span>
               </div>
               <div className="header-actions">
-                <button className="cta-button cta-button--primary" onClick={() => setActiveTrack('scenario')}>
-                  Open Scenario Mode
+                <button className={`cta-button ${scenarioLanguage === 'japanese' ? 'cta-button--primary' : ''}`} onClick={() => setScenarioLanguage('japanese')}>
+                  日本語情境
+                </button>
+                <button className={`cta-button ${scenarioLanguage === 'english' ? 'cta-button--primary' : ''}`} onClick={() => setScenarioLanguage('english')}>
+                  English Scenarios
+                </button>
+                <button className={`cta-button ${scenarioCategory === 'daily' ? 'cta-button--primary' : ''}`} onClick={() => setScenarioCategory('daily')}>
+                  常用場景
+                </button>
+                <button className={`cta-button ${scenarioCategory === 'business' ? 'cta-button--primary' : ''}`} onClick={() => setScenarioCategory('business')}>
+                  公司商務
                 </button>
               </div>
             </>
@@ -396,19 +417,27 @@ export default function App() {
 
         {activeTrack === 'studio' && <ProtectedContentStudio />}
 
-        {activeTrack === 'scenario' && <ScenarioStudio />}
+        {activeTrack === 'scenario' && (
+          <ScenarioStudio
+            language={scenarioLanguage}
+            activeCategory={scenarioCategory}
+            onLanguageChange={setScenarioLanguage}
+            onCategoryChange={setScenarioCategory}
+          />
+        )}
       </main>
 
       <footer className="app-footer">
-        <p>{activeTrack === 'english' ? 'Language learning platform | Japanese and advanced English tracks' : activeTrack === 'studio' ? 'Content ingestion and lesson normalization workspace' : activeTrack === 'scenario' ? 'Task-based scenario learning for real-world language use' : '会話学習に最適化 | 深く、速く、効率よく'}</p>
+        <p className="footer-platform">語言學習平台</p>
+        <p>{activeTrack === 'english' ? '英文中高級訓練 | 精準詞彙、成熟表達、閱讀理解、寫作升級' : activeTrack === 'studio' ? '內容製作工作室 | 課程素材整理與正規化' : activeTrack === 'scenario' ? '任務式情境學習 | 餐廳、車站、飯店、商務等真實場景' : '日語學習 | 文法・語彙・會話，每次一點點累積'}</p>
         <p className="author-info">
           作者：<strong>Grant, K. J. Huang, Ph.D. 黃冠叡</strong>{' '}
           <a href="mailto:guanruey@gmail.com">聯絡</a>
         </p>
         <p className="copyright">
-          © 2025-2026 Language Learning Platform. All rights reserved.
+          © 2025-2026 語言學習平台。版權所有，保留所有權利。
           <br />
-          版權所有，保留所有權利。此網站內容可免費用於學習，禁止未經授權的商業或其他使用。
+          此網站內容可免費用於學習，禁止未經授權的商業或其他使用。
         </p>
       </footer>
     </div>

@@ -22,12 +22,36 @@ function SpeakButton({ text, language }) {
   )
 }
 
-export default function ScenarioStudio() {
-  const [language, setLanguage] = useState('japanese')
-  const [activeCategory, setActiveCategory] = useState('daily')
+export default function ScenarioStudio({
+  language: controlledLanguage,
+  activeCategory: controlledCategory,
+  onLanguageChange,
+  onCategoryChange,
+}) {
+  const [internalLanguage, setInternalLanguage] = useState('japanese')
+  const [internalCategory, setInternalCategory] = useState('daily')
   const [scenarioId, setScenarioId] = useState(
     () => scenarioModules.find((item) => item.category === 'daily')?.id || scenarioModules[0]?.id || null
   )
+
+  const language = controlledLanguage || internalLanguage
+  const activeCategory = controlledCategory || internalCategory
+
+  const setLanguage = (nextLanguage) => {
+    if (onLanguageChange) {
+      onLanguageChange(nextLanguage)
+      return
+    }
+    setInternalLanguage(nextLanguage)
+  }
+
+  const setActiveCategory = (nextCategory) => {
+    if (onCategoryChange) {
+      onCategoryChange(nextCategory)
+      return
+    }
+    setInternalCategory(nextCategory)
+  }
 
   const categoryModules = useMemo(
     () => scenarioModules.filter((item) => item.category === activeCategory),

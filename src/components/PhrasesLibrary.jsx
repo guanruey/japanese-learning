@@ -5,7 +5,8 @@ import FuriganaText from './FuriganaText'
 import { fallbackPhrases } from '../data/phrases'
 import './PhrasesLibrary.css'
 
-const CATEGORIES = ['全部', '問候', '購物', '問路', '餐廳', '就醫', '職場', '情感', '交通', '住宿', '標示']
+const CATEGORIES = ['全部', '入門必學', '問候', '購物', '問路', '餐廳', '就醫', '職場', '情感', '交通', '住宿', '標示']
+const STARTER_IDS = new Set(fallbackPhrases.filter(p => p.starter).map(p => p.id))
 
 export default function PhrasesLibrary({ initialCategory = '全部', readingMode = 'furigana', savedIds = [], onToggleSave }) {
   const [data, setData] = useState(fallbackPhrases)
@@ -26,7 +27,10 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
       const { data: rows, error } = await supabase.from('phrases').select('*').order('id')
       if (error) throw error
       if (rows && rows.length > 0) {
-        setData(rows)
+        const supabaseIds = new Set(rows.map(r => r.id))
+        const localOnly = fallbackPhrases.filter(p => !supabaseIds.has(p.id))
+        const merged = [...rows, ...localOnly].sort((a, b) => a.id - b.id)
+        setData(merged)
       } else {
         setData(fallbackPhrases)
       }
@@ -40,7 +44,8 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
 
   const filtered = useMemo(() => {
     let result = data
-    if (filterCategory !== '全部') result = result.filter(p => p.category === filterCategory)
+    if (filterCategory === '入門必學') result = result.filter(p => STARTER_IDS.has(p.id))
+    else if (filterCategory !== '全部') result = result.filter(p => p.category === filterCategory)
     if (searchTerm) {
       result = result.filter(p =>
         (p.phrase_ja || '').includes(searchTerm) ||
