@@ -1548,6 +1548,201 @@ export const scenarioModules = [
     },
   },
   {
+    id: 'friend-catchup',
+    category: 'daily',
+    setting: 'Catching up with a friend',
+    label: '朋友閒聊',
+    goal: '久違見面寒暄、聊近況，並約定下次見面的時間。',
+    difficulty: 'Beginner to Intermediate',
+    tags: ['casual-form', 'small-talk', 'making-plans'],
+    languages: {
+      japanese: {
+        opener: '跟朋友說話習慣用常體（プレーン形），不是每句都要加です／ます，這篇練習從寒暄一路到約時間。',
+        mission: '你在路上巧遇好久不見的朋友，簡單寒暄、聊聊最近的生活，最後約好下次一起吃飯的時間。',
+        keyPatterns: [
+          '久しぶり！元気？',
+          '最近どう？',
+          '今度一緒にご飯行こうよ。',
+          'いつがいい？',
+        ],
+        keyVocabulary: ['久しぶり', '最近', '元気', '暇', '都合'],
+        exampleSets: [
+          {
+            title: '打招呼寒暄',
+            lines: [
+              '久しぶり！元気？',
+              'わあ、久しぶりだね。',
+              '全然変わってないね。',
+              '偶然だね、こんなところで会うなんて。',
+            ],
+          },
+          {
+            title: '聊近況',
+            lines: [
+              '最近どう？',
+              '仕事どう？忙しい？',
+              'まあまあかな。',
+              '相変わらずだよ。',
+            ],
+          },
+          {
+            title: '約下次見面',
+            lines: [
+              '今度一緒にご飯行こうよ。',
+              'いいね、行こう。',
+              'いつがいい？',
+              '来週の土曜日はどう？',
+            ],
+          },
+        ],
+        responseBank: [
+          '久しぶり！元気だよ。',
+          'うん、まあまあかな。',
+          'いいね、行こう！',
+          '土曜日なら空いてるよ。',
+          '仕事忙しくてさ。',
+          '全然連絡してなかったね。',
+        ],
+        steps: [
+          {
+            title: '寒暄開場',
+            learnerLine: '久しぶり！元気？',
+            coachNote: '朋友之間用常體比較自然，語尾上揚就能表達疑問，不用加ですか。',
+            branches: [
+              '久しぶり！元気だよ。',
+              'わあ、びっくりした！',
+              '全然変わってないね。',
+            ],
+          },
+          {
+            title: '聊近況',
+            learnerLine: '最近どう？仕事忙しい？',
+            coachNote: '常體疑問句不用加か，語調就能表達問句。',
+            branches: [
+              'まあまあかな。',
+              '相変わらずだよ。',
+              '結構忙しいんだ。',
+            ],
+          },
+          {
+            title: '邀約下次見面',
+            learnerLine: '今度一緒にご飯行こうよ。いつがいい？',
+            coachNote: '「〜ようよ」是常體邀約用法，比「〜ましょう」更親近自然。',
+            branches: [
+              'いいね、行こう！',
+              '来週なら空いてるよ。',
+              '土曜日はどう？',
+            ],
+          },
+        ],
+        repairPoints: [
+          {
+            weak: '久しぶり。元気ですか。',
+            better: '久しぶり！元気？',
+            why: '朋友之間用常體＋語尾上揚就夠自然，加ですか反而顯得生疏、有距離感。',
+          },
+          {
+            weak: '今度ご飯行きましょう。',
+            better: '今度一緒にご飯行こうよ。',
+            why: '對朋友用常體邀約「〜ようよ」更自然，「〜ましょう」偏正式、比較適合對外人或工作場合使用。',
+          },
+        ],
+      },
+      english: {
+        opener: 'Catching up with an old friend uses relaxed, informal English rather than the more formal patterns used in service situations.',
+        mission: 'You run into a friend you have not seen in a while. Greet them, catch up on their life, and set up a plan to meet again.',
+        keyPatterns: [
+          'Long time no see!',
+          'How have you been?',
+          'We should hang out sometime.',
+          'When are you free?',
+        ],
+        keyVocabulary: ['catch up', 'busy', 'free', 'plans', 'hang out'],
+        exampleSets: [
+          {
+            title: 'Greeting',
+            lines: [
+              'Long time no see!',
+              'Oh wow, it has been forever.',
+              'You look exactly the same.',
+              'What are the odds of running into you here.',
+            ],
+          },
+          {
+            title: 'Catching up',
+            lines: [
+              'How have you been?',
+              'How is work going?',
+              'Pretty good, can not complain.',
+              'Same as always, honestly.',
+            ],
+          },
+          {
+            title: 'Making plans',
+            lines: [
+              'We should hang out sometime.',
+              'Yeah, definitely.',
+              'When are you free?',
+              'How about next Saturday?',
+            ],
+          },
+        ],
+        responseBank: [
+          'I have been good, thanks!',
+          'Pretty busy with work, honestly.',
+          "Yeah, let's do it!",
+          'I am free next Saturday.',
+          'Same old, same old.',
+          'It has been way too long.',
+        ],
+        steps: [
+          {
+            title: 'Greeting',
+            learnerLine: 'Long time no see! How have you been?',
+            coachNote: 'Casual greetings skip formal phrasing like "How do you do."',
+            branches: [
+              'I have been good, thanks!',
+              'Oh my gosh, hi!',
+              'You look exactly the same!',
+            ],
+          },
+          {
+            title: 'Catching up',
+            learnerLine: 'How is work going? Are you still busy?',
+            coachNote: 'Informal follow-up questions keep the conversation going naturally.',
+            branches: [
+              'Pretty busy, honestly.',
+              'Same as always.',
+              'Actually, I just changed jobs.',
+            ],
+          },
+          {
+            title: 'Making plans',
+            learnerLine: 'We should hang out sometime. When are you free?',
+            coachNote: '"We should ___ sometime" is a common casual way to suggest plans without committing to a time yet.',
+            branches: [
+              "Yeah, let's do it!",
+              'I am free next Saturday.',
+              'Let me check my schedule.',
+            ],
+          },
+        ],
+        repairPoints: [
+          {
+            weak: 'Long time no see. How are you doing today?',
+            better: 'Long time no see! How have you been?',
+            why: '"How have you been" asks about the whole time apart, which fits a catch-up better than "today."',
+          },
+          {
+            weak: 'We should meet sometimes.',
+            better: 'We should hang out sometime.',
+            why: '"Hang out" is the natural casual verb for friends, and "sometime" should be singular here, not "sometimes."',
+          },
+        ],
+      },
+    },
+  },
+  {
     id: 'business-meeting',
     category: 'business',
     setting: 'Office',
