@@ -1,35 +1,17 @@
 import { useState } from 'react'
 import { fallbackPhrases } from '../data/phrases'
 import { speak } from '../utils/speech'
+import { getTodayStr, computeStreak } from '../utils/streak'
 import FuriganaText from './FuriganaText'
 import './DailyPhrase.css'
 
 const STARTER_PHRASES = fallbackPhrases.filter(p => p.starter)
 const STORAGE_KEY = 'daily-phrase-dates'
 
-function getTodayStr() {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
 function dateHash(dateStr, length) {
   let h = 0
   for (let i = 0; i < dateStr.length; i++) h = (h * 31 + dateStr.charCodeAt(i)) >>> 0
   return h % length
-}
-
-function computeStreak(dates, today) {
-  const set = new Set(dates)
-  if (!set.has(today)) return 0
-  let streak = 0
-  let cur = new Date(today + 'T12:00:00')
-  while (true) {
-    const s = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, '0')}-${String(cur.getDate()).padStart(2, '0')}`
-    if (!set.has(s)) break
-    streak++
-    cur.setDate(cur.getDate() - 1)
-  }
-  return streak
 }
 
 export default function DailyPhrase({ savedPhraseIds = [], readingMode = 'furigana', onExplore }) {

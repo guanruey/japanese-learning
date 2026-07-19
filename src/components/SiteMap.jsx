@@ -10,6 +10,7 @@ const SECTIONS = [
       { label: '文法', sub: 'N5・N4 型句，含例句與變體', tab: 'grammar' },
       { label: '語彙', sub: '300+ 詞彙，按詞性分類', tab: 'vocabulary' },
       { label: '会話フレーズ', sub: '52 句日常場景用語', tab: 'phrases' },
+      { label: '打卡地圖', sub: '分類打卡，streak 追蹤進度', tab: 'checkin' },
     ],
   },
   {

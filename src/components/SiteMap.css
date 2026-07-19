@@ -92,3 +92,13 @@
   font-size: 0.76rem;
   color: var(--text-secondary, #888);
 }
+
+/* ── dark mode ── */
+[data-theme="dark"] .sitemap__card {
+  background: rgba(31, 41, 55, 0.86);
+  border-color: rgba(111, 125, 152, 0.3);
+}
+
+[data-theme="dark"] .sitemap__item-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
