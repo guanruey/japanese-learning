@@ -14,6 +14,12 @@ export default function SavedReview({
   onToggleGrammarSave,
   onToggleVocabSave,
   onTogglePhraseSave,
+  englishExpressionsData = [],
+  englishVocabData = [],
+  savedEnglishExpressionIds = [],
+  savedEnglishVocabIds = [],
+  onToggleEnglishExpressionSave,
+  onToggleEnglishVocabSave,
 }) {
   const [vocabData, setVocabData] = useState([])
   const [phraseData, setPhraseData] = useState([])
@@ -51,7 +57,9 @@ export default function SavedReview({
   }, [savedVocabularyIds.join(','), savedPhraseIds.join(',')])
 
   const savedGrammar = grammarData.filter(g => savedGrammarIds.includes(g.id))
-  const total = savedGrammar.length + vocabData.length + phraseData.length
+  const savedEnglishExpressions = englishExpressionsData.filter(e => savedEnglishExpressionIds.includes(e.id))
+  const savedEnglishVocab = englishVocabData.filter(v => savedEnglishVocabIds.includes(v.id))
+  const total = savedGrammar.length + vocabData.length + phraseData.length + savedEnglishExpressions.length + savedEnglishVocab.length
 
   if (loading) return <div className="loading">読み込み中...</div>
 
@@ -69,7 +77,7 @@ export default function SavedReview({
   return (
     <div className="saved-review">
       <p className="saved-review__summary">
-        已保存：文法 {savedGrammar.length} 件・語彙 {vocabData.length} 件・句型 {phraseData.length} 件
+        已保存：文法 {savedGrammar.length} 件・語彙 {vocabData.length} 件・句型 {phraseData.length} 件・英文表達 {savedEnglishExpressions.length} 件・英文詞組 {savedEnglishVocab.length} 件
       </p>
 
       {savedGrammar.length > 0 && (
@@ -183,6 +191,57 @@ export default function SavedReview({
                   <div className="variant"><span className="variant-label">丁寧</span><span className="variant-text">{p.formal}</span></div>
                   <div className="variant"><span className="variant-label">普通</span><span className="variant-text">{p.casual}</span></div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {savedEnglishExpressions.length > 0 && (
+        <section className="saved-section">
+          <h2 className="saved-section__title">英文表達句型</h2>
+          <div className="saved-section__cards">
+            {savedEnglishExpressions.map(e => (
+              <div key={e.id} className="saved-english-card">
+                <div className="saved-english-card__header">
+                  <div>
+                    <span className="saved-english-card__meta">{e.category} · {e.register}</span>
+                    <h3 className="saved-english-card__pattern">{e.pattern}</h3>
+                  </div>
+                  <button
+                    className="english-save-btn is-saved"
+                    onClick={() => onToggleEnglishExpressionSave?.(e.id)}
+                    title="取消儲存"
+                  >★</button>
+                </div>
+                <p className="saved-english-card__zh">{e.explanationZh}</p>
+                <blockquote className="saved-english-card__example">{e.exampleSentence}</blockquote>
+                <p className="saved-english-card__example-zh">{e.exampleZh}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {savedEnglishVocab.length > 0 && (
+        <section className="saved-section">
+          <h2 className="saved-section__title">英文精準詞組</h2>
+          <div className="saved-section__cards">
+            {savedEnglishVocab.map(v => (
+              <div key={v.id} className="saved-english-card">
+                <div className="saved-english-card__header">
+                  <div>
+                    <span className="saved-english-card__meta">{v.category} · {v.register}</span>
+                    <h3 className="saved-english-card__pattern">{v.headword}</h3>
+                  </div>
+                  <button
+                    className="english-save-btn is-saved"
+                    onClick={() => onToggleEnglishVocabSave?.(v.id)}
+                    title="取消儲存"
+                  >★</button>
+                </div>
+                <p className="saved-english-card__zh">{v.meaningZh}</p>
+                <p className="saved-english-card__note">{v.nuanceNote}</p>
               </div>
             ))}
           </div>

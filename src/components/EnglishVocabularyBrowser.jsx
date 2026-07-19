@@ -7,7 +7,7 @@ function collectOptions(items, key) {
   return [FILTER_ALL, ...new Set(items.map((item) => item[key]).filter(Boolean))]
 }
 
-export default function EnglishVocabularyBrowser({ data = [] }) {
+export default function EnglishVocabularyBrowser({ data = [], savedIds = [], onToggleSave }) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState(FILTER_ALL)
   const [focus, setFocus] = useState(FILTER_ALL)
@@ -116,18 +116,28 @@ export default function EnglishVocabularyBrowser({ data = [] }) {
       <div className="english-vocabulary__layout">
         <aside className="english-vocabulary__list">
           {filtered.map((item) => (
-            <button
+            <div
               key={item.id}
               className={`english-vocabulary-card ${activeItem?.id === item.id ? 'is-active' : ''}`}
-              onClick={() => setActiveId(item.id)}
             >
-              <div className="english-vocabulary-card__meta">
-                <span>{item.category}</span>
-                <span>{item.register}</span>
-              </div>
-              <h3>{item.headword}</h3>
-              <p>{item.focus}</p>
-            </button>
+              <button className="english-vocabulary-card__body" onClick={() => setActiveId(item.id)}>
+                <div className="english-vocabulary-card__meta">
+                  <span>{item.category}</span>
+                  <span>{item.register}</span>
+                </div>
+                <h3>{item.headword}</h3>
+                <p>{item.focus}</p>
+              </button>
+              {onToggleSave && (
+                <button
+                  className={`english-save-btn ${savedIds.includes(item.id) ? 'is-saved' : ''}`}
+                  onClick={() => onToggleSave(item.id)}
+                  title={savedIds.includes(item.id) ? '取消儲存' : '儲存'}
+                >
+                  {savedIds.includes(item.id) ? '★' : '☆'}
+                </button>
+              )}
+            </div>
           ))}
 
           {filtered.length === 0 && <div className="english-vocabulary__empty">No matching vocabulary sets yet.</div>}
@@ -145,6 +155,15 @@ export default function EnglishVocabularyBrowser({ data = [] }) {
                   <span>{activeItem.category}</span>
                   <span>{activeItem.focus}</span>
                   <span>{activeItem.register}</span>
+                  {onToggleSave && (
+                    <button
+                      className={`english-save-btn english-save-btn--detail ${savedIds.includes(activeItem.id) ? 'is-saved' : ''}`}
+                      onClick={() => onToggleSave(activeItem.id)}
+                      title={savedIds.includes(activeItem.id) ? '取消儲存' : '儲存此詞組'}
+                    >
+                      {savedIds.includes(activeItem.id) ? '★ 已儲存' : '☆ 儲存'}
+                    </button>
+                  )}
                 </div>
               </div>
 

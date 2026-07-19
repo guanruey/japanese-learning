@@ -215,6 +215,19 @@
   background: var(--border);
 }
 
+/* ── dark mode ── */
+[data-theme="dark"] .daily-phrase--compact {
+  border-color: #22c55e;
+}
+
+[data-theme="dark"] .daily-phrase__done-mark {
+  color: #22c55e;
+}
+
+[data-theme="dark"] .daily-phrase__streak {
+  color: #fbbf24;
+}
+
 /* ── responsive ── */
 @media (max-width: 600px) {
   .daily-phrase--idle {

@@ -26,6 +26,10 @@ export default function EnglishLearningHub({
   vocabularyData,
   writingData,
   onSelectTab,
+  savedExpressionIds = [],
+  savedVocabIds = [],
+  onToggleExpressionSave,
+  onToggleVocabSave,
 }) {
   const current = moduleSummaries[activeTab]
 
@@ -100,7 +104,7 @@ export default function EnglishLearningHub({
           ))}
         </nav>
 
-        <EnglishVocabularyBrowser data={vocabularyData} />
+        <EnglishVocabularyBrowser data={vocabularyData} savedIds={savedVocabIds} onToggleSave={onToggleVocabSave} />
       </div>
     )
   }
@@ -138,7 +142,7 @@ export default function EnglishLearningHub({
           ))}
         </nav>
 
-        <EnglishExpressionsBrowser data={expressionsData} />
+        <EnglishExpressionsBrowser data={expressionsData} savedIds={savedExpressionIds} onToggleSave={onToggleExpressionSave} />
       </div>
     )
   }

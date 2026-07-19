@@ -49,3 +49,69 @@
   flex-direction: column;
   gap: 12px;
 }
+
+/* ── English saved cards ── */
+.saved-english-card {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.84);
+  display: grid;
+  gap: 8px;
+}
+
+.saved-english-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.saved-english-card__meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #888);
+  letter-spacing: 0.04em;
+}
+
+.saved-english-card__pattern {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 4px 0 0;
+  line-height: 1.35;
+}
+
+.saved-english-card__zh {
+  font-size: 0.92rem;
+  color: var(--text-secondary, #555);
+}
+
+.saved-english-card__example {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid #0ea5e9;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.saved-english-card__example-zh {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #888);
+}
+
+.saved-english-card__note {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #666);
+  font-style: italic;
+}
+
+[data-theme="dark"] .saved-english-card {
+  background: rgba(31, 41, 55, 0.86);
+  border-color: rgba(111, 125, 152, 0.3);
+}
+
+/* ── dark mode ── */
+[data-theme="dark"] .saved-section__title {
+  color: var(--text-secondary, #888);
+  border-bottom-color: rgba(111, 125, 152, 0.25);
+}

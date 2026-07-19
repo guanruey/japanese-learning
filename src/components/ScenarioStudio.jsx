@@ -184,19 +184,18 @@ export default function ScenarioStudio({
     <section className="scenario-studio">
       <div className="scenario-studio__hero">
         <div>
-          <p className="scenario-studio__eyebrow">Scenario Mode</p>
-          <h2>Learn through task-based real-world situations</h2>
+          <p className="scenario-studio__eyebrow">情境對話模式</p>
+          <h2>透過真實生活情境，自然習得語言</h2>
           <p className="scenario-studio__description">
-            Instead of studying isolated phrases, you move through a concrete situation with a goal, likely branch
-            responses, and repair points. This makes restaurant, station, hotel, and service scenarios much more usable.
+            不是死背孤立句子，而是在有明確目標的情境中推進對話：餐廳點餐、車站問路、飯店入住、商務溝通，每個場景都有分支回應與修正點。
           </p>
         </div>
         <div className="scenario-studio__hero-card">
-          <p>Why this mode works</p>
+          <p>為什麼情境練習有效</p>
           <ul>
-            <li>Starts from a real task, not random sentences</li>
-            <li>Shows likely replies from the other side</li>
-            <li>Trains clarification and recovery, not just first lines</li>
+            <li>從真實任務出發，不是隨機句子</li>
+            <li>顯示對方可能的各種回應</li>
+            <li>練習澄清與修補，不只是開場白</li>
           </ul>
         </div>
       </div>
@@ -245,7 +244,7 @@ export default function ScenarioStudio({
 
       <div className="scenario-studio__overview">
         <article className="scenario-studio__card scenario-studio__card--primary">
-          <p className="scenario-studio__label">Mission</p>
+          <p className="scenario-studio__label">任務</p>
           <h3>{activeScenario.label}</h3>
           <p>{content.mission}</p>
           <div className="scenario-studio__meta">
@@ -256,7 +255,7 @@ export default function ScenarioStudio({
         </article>
 
         <article className="scenario-studio__card">
-          <p className="scenario-studio__label">Core language</p>
+          <p className="scenario-studio__label">核心語句</p>
           <div className="scenario-studio__chips">
             {content.keyPatterns.map((pattern) => (
               <span key={pattern} className="scenario-chip scenario-chip--speakable">
@@ -268,7 +267,7 @@ export default function ScenarioStudio({
         </article>
 
         <article className="scenario-studio__card">
-          <p className="scenario-studio__label">Keywords</p>
+          <p className="scenario-studio__label">關鍵詞彙</p>
           <div className="scenario-studio__chips scenario-studio__chips--muted">
             {content.keyVocabulary.map((word) => (
               <span key={word}>{word}</span>
@@ -278,7 +277,7 @@ export default function ScenarioStudio({
       </div>
 
       <section className="scenario-studio__card">
-        <p className="scenario-studio__label">Extra example lines</p>
+        <p className="scenario-studio__label">延伸例句</p>
         <div className="scenario-studio__examples">
           {content.exampleSets?.map((group) => (
             <article key={group.title} className="scenario-example-group">
@@ -298,7 +297,7 @@ export default function ScenarioStudio({
 
       <section className="scenario-studio__card">
         <div className="scenario-flow__header">
-          <p className="scenario-studio__label">Scenario flow</p>
+          <p className="scenario-studio__label">對話流程</p>
           {hasSteps && (
             <div className="scenario-mode-toggle">
               <button
@@ -336,14 +335,14 @@ export default function ScenarioStudio({
                     <div className="scenario-step__body">
                       <h3>{step.title}</h3>
                       <div className="scenario-step__block">
-                        <p className="scenario-step__label">Your line</p>
+                        <p className="scenario-step__label">你的台詞</p>
                         <div className="scenario-step__quote-row">
                           <blockquote>{step.learnerLine}</blockquote>
                           <SpeakButton text={step.learnerLine} language={language} />
                         </div>
                       </div>
                       <div className="scenario-step__block">
-                        <p className="scenario-step__label">Likely replies</p>
+                        <p className="scenario-step__label">對方可能的回應</p>
                         <ul>
                           {step.branches.map((branch) => (
                             <li key={branch} className="scenario-step__reply">
@@ -358,7 +357,7 @@ export default function ScenarioStudio({
                   </article>
                 ))
               ) : (
-                <div className="scenario-studio__empty">This scenario shell is ready. Next we can fill in the full step chain like the restaurant demo.</div>
+                <div className="scenario-studio__empty">此情境架構已就緒，下一步可以填入完整的對話步驟鏈。</div>
               )}
             </div>
           </>
@@ -366,7 +365,7 @@ export default function ScenarioStudio({
       </section>
 
       <section className="scenario-studio__card">
-        <p className="scenario-studio__label">Response bank</p>
+        <p className="scenario-studio__label">備用回應庫</p>
         <div className="scenario-studio__repairs">
           {content.responseBank?.map((line) => (
             <article key={line} className="scenario-repair scenario-repair--neutral">
@@ -380,7 +379,7 @@ export default function ScenarioStudio({
       </section>
 
       <section className="scenario-studio__card">
-        <p className="scenario-studio__label">Repair points</p>
+        <p className="scenario-studio__label">修正練習</p>
         <div className="scenario-studio__repairs">
           {content.repairPoints.length > 0 ? (
             content.repairPoints.map((item) => (
@@ -397,7 +396,7 @@ export default function ScenarioStudio({
               </article>
             ))
           ) : (
-            <div className="scenario-studio__empty">Repair examples can be added once this scenario gets a full lesson build.</div>
+            <div className="scenario-studio__empty">完整課程建置後，將在此加入修正練習範例。</div>
           )}
         </div>
       </section>
