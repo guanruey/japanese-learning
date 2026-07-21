@@ -23,11 +23,11 @@ export default function Navigation({ activeTab, setActiveTab, theme, toggleTheme
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 h-screen sticky top-0 p-4 z-30 shadow-sm overflow-y-auto">
-        <div className="flex items-center justify-between pb-6 mb-6 border-b border-slate-100 dark:border-slate-700 px-2">
 
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-indigo-200 dark:shadow-none">
+      <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white dark:bg-slate-800/95 backdrop-blur-md border-r-2 border-slate-200 dark:border-slate-700/80 h-screen sticky top-0 p-4 z-30 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 overflow-y-auto">
+        <div className="flex items-center justify-between pb-6 mb-6 border-b border-slate-200 dark:border-slate-700 px-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-indigo-500/20">
               日
             </div>
             <div>
@@ -38,14 +38,14 @@ export default function Navigation({ activeTab, setActiveTab, theme, toggleTheme
 
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+            className="p-2 rounded-xl text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
             title="切換主題"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = activeTab === item.id
@@ -53,18 +53,20 @@ export default function Navigation({ activeTab, setActiveTab, theme, toggleTheme
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl font-medium text-sm transition-all ${
+                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
                   isActive
-                    ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-200'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border-l-4 border-amber-400 translate-x-1'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.id === 'srs' && dueCount > 0 && (
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-500 text-white animate-pulse">
+                  <span className={`px-2 py-0.5 text-xs font-extrabold rounded-full animate-pulse ${
+                    isActive ? 'bg-amber-400 text-slate-900' : 'bg-rose-500 text-white'
+                  }`}>
                     {dueCount}
                   </span>
                 )}
@@ -72,6 +74,7 @@ export default function Navigation({ activeTab, setActiveTab, theme, toggleTheme
             )
           })}
         </nav>
+
 
         <div className="pt-4 border-t border-slate-100 dark:border-slate-700 px-2 text-xs text-slate-400">
           <p>© 2026 Japanese Learning</p>

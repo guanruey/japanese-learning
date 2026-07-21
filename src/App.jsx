@@ -165,27 +165,28 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Top Header Bar */}
 
-        <header className="sticky top-0 z-20 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
+        <header className="sticky top-0 z-20 mx-4 sm:mx-8 mt-4 mb-2 rounded-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 px-5 py-3.5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActiveTrack(activeTrack === 'japanese' ? 'english' : 'japanese')}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/80 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition"
             >
               切換賽道：{activeTrack === 'japanese' ? '日本語学習' : 'English Lab'}
             </button>
 
             <button
               onClick={cycleReadingGuide}
-              className="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-bold border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition"
+              className="px-3.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-bold border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition"
             >
               發音標註：{readingMode === 'furigana' ? 'ふりがな' : readingMode === 'romaji' ? 'ローマ字' : 'OFF'}
             </button>
           </div>
 
-          <div className="text-xs text-slate-400 font-medium hidden sm:block">
+          <div className="text-xs text-slate-400 font-semibold hidden sm:block">
             JLPT N5 / N4 互動學習平台
           </div>
         </header>
+
 
         <SpeechSettingsPanel activeTrack={activeTrack} />
 
