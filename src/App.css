@@ -1,11 +1,4 @@
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg);
-  position: relative;
-  overflow-x: hidden;
-}
+/* Cleaned App.css - Legacy styles trimmed to prevent layout conflicts with Tailwind CSS */
 
 .app::before {
   content: '© K. J. Huang     © K. J. Huang     © K. J. Huang     © K. J. Huang     © K. J. Huang     © K. J. Huang     © K. J. Huang     © K. J. Huang';
@@ -17,7 +10,7 @@
   font-size: 3rem;
   font-weight: bold;
   color: var(--dark);
-  opacity: 0.05;
+  opacity: 0.03;
   transform: rotate(-45deg) translateY(-50%);
   pointer-events: none;
   z-index: 0;
@@ -26,312 +19,31 @@
   text-shadow: 0 0 10px var(--dark);
 }
 
-.app > * {
-  position: relative;
-  z-index: 1;
+ruby {
+  ruby-position: over;
 }
 
-.app-header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  color: white;
-  padding: 40px 20px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  position: relative;
+rb {
+  font: inherit;
 }
 
-.app--english .app-header {
-  background:
-    radial-gradient(circle at top left, rgba(244, 199, 89, 0.24), transparent 30%),
-    linear-gradient(135deg, var(--accent-strong) 0%, var(--accent-soft) 100%);
+rt {
+  font-size: 0.58em;
+  line-height: 1.1;
+  color: #64748b;
 }
 
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  font-size: 1.5rem;
-  padding: 8px 12px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-.header-content h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-
-.header-content p {
-  font-size: 1.1rem;
-  opacity: 0.95;
-  font-weight: 300;
-}
-
-.header-subline {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
-  font-size: 0.92rem;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.header-subline span {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-}
-
-.header-actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.track-switch {
-  display: inline-flex;
-  gap: 8px;
-  padding: 6px;
-  margin-bottom: 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.track-switch__button {
-  border-radius: 999px;
-  padding: 10px 16px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.82);
-  border: 1px solid transparent;
-  font-weight: 700;
-}
-
-.track-switch__button.active {
-  background: rgba(255, 255, 255, 0.22);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.24);
-}
-
-.cta-button,
-.study-launch__button,
-.save-btn {
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--dark);
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 700;
-  transition: all 0.2s;
-}
-
-.cta-button:hover,
-.study-launch__button:hover,
-.save-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.cta-button--primary {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.study-launch {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 0 20px 10px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.study-launch__card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px 18px 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  display: grid;
-  gap: 10px;
-}
-
-.study-launch__card--primary {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.14), var(--card));
-}
-
-.study-launch__eyebrow {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--primary);
-  letter-spacing: 0.04em;
-}
-
-.study-launch__card h2 {
-  font-size: 1.1rem;
-  line-height: 1.4;
-}
-
-.study-launch__card p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-.study-launch__button {
-  justify-self: start;
-}
-
-.tab-navigation {
-  display: flex;
-  gap: 10px;
-  padding: 20px;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.tab-btn {
-  padding: 12px 24px;
-  background: var(--bg);
-  color: var(--dark);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-
-.tab-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: rgba(124, 134, 234, 0.1);
-}
-
-.tab-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.tab-btn--reading {
-  margin-left: auto;
-  font-size: 0.85rem;
-  padding: 8px 16px;
-  opacity: 0.75;
-}
-
-.tab-btn--reading:hover {
-  opacity: 1;
-}
-
-.app-main {
-  flex: 1;
-  padding: 30px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 1.2rem;
-  color: var(--primary);
-}
-
-.app-footer {
-  padding: 20px;
-  text-align: center;
-  background: var(--card);
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.app-footer p {
-  margin: 8px 0;
-}
-
-.author-info {
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.author-info a {
-  color: var(--primary);
-  transition: all 0.2s;
-}
-
-.author-info a:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-.copyright {
-  font-size: 0.75rem;
-  opacity: 0.65;
-  line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-  .header-content h1 {
-    font-size: 1.8rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
-
-  .header-content p {
-    font-size: 1rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  .app-main {
-    padding: 20px 15px;
-  }
-
-  .tab-btn {
-    padding: 10px 16px;
-    font-size: 0.9rem;
-  }
-
-  .study-launch {
-    grid-template-columns: 1fr;
-    padding: 0 15px 10px;
-  }
-
-  .header-actions {
-    flex-direction: column;
-  }
-
-  .track-switch {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .cta-button,
-  .study-launch__button {
-    width: 100%;
-  }
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
 }
