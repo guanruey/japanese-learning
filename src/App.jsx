@@ -72,13 +72,6 @@ export default function App() {
   const [savedEnglishExpressionIds, setSavedEnglishExpressionIds] = useState(() => loadStoredValue(STORAGE_KEYS.englishExpressionsSaved, []))
   const [savedEnglishVocabIds, setSavedEnglishVocabIds] = useState(() => loadStoredValue(STORAGE_KEYS.englishVocabSaved, []))
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'light'
-    setTheme(savedTheme)
-    document.documentElement.setAttribute('data-theme', savedTheme)
-    loadAllData()
-  }, [])
-
   const loadAllData = async () => {
     try {
       setLoading(true)
@@ -111,6 +104,23 @@ export default function App() {
     }
   }
 
+  const applyTheme = (t) => {
+    if (t === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+    document.documentElement.setAttribute('data-theme', t)
+  }
+
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'light'
+    setTheme(savedTheme)
+    applyTheme(savedTheme)
+    loadAllData()
+  }, [])
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.activeTrack, activeTrack)
   }, [activeTrack])
@@ -135,7 +145,7 @@ export default function App() {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
     setTheme(newTheme)
     localStorage.setItem(STORAGE_KEYS.theme, newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
+    applyTheme(newTheme)
   }
 
   const cycleReadingGuide = () => {
@@ -151,7 +161,7 @@ export default function App() {
   const togglePhraseSaved = (id) => setSavedPhraseIds((c) => toggleStoredId(c, id))
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex">
+    <div className="min-h-screen bg-slate-100/80 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex transition-colors duration-300">
       {/* Navigation Sidebar & Bottom Bar */}
       <Navigation
         activeTab={activeTab}
@@ -161,11 +171,11 @@ export default function App() {
         dueCount={srsDueItems.length}
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      {/* Main Content Area with clear left margin separation */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen pl-4 sm:pl-6 lg:pl-10 pr-4 sm:pr-6 lg:pr-10 py-4">
         {/* Top Header Bar */}
+        <header className="sticky top-0 z-20 mb-6 rounded-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 px-6 py-4 flex items-center justify-between shadow-sm">
 
-        <header className="sticky top-0 z-20 mx-4 sm:mx-8 mt-4 mb-2 rounded-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 px-5 py-3.5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActiveTrack(activeTrack === 'japanese' ? 'english' : 'japanese')}
