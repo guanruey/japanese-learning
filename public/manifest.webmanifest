@@ -1,0 +1,17 @@
+{
+  "name": "日本語学習プラットフォーム - JLPT N5/N4 Pro",
+  "short_name": "日語學習",
+  "description": "JLPT N5/N4 の文法、語彙、会話フレーズを學べる互動學習平台",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

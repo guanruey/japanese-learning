@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
+import { Mic, MicOff, Volume2 } from 'lucide-react'
 import { scenarioCategories, scenarioModules, scenarioTracks } from '../data/scenarioContent'
 import { speak } from '../utils/speech'
 import './ScenarioStudio.css'
@@ -19,6 +20,67 @@ function SpeakButton({ text, language }) {
     >
       🔊
     </button>
+  )
+}
+
+function VoiceInputButton({ targetText, language, onResult }) {
+  const [isListening, setIsListening] = useState(false)
+  const [transcript, setTranscript] = useState('')
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert('您的瀏覽器不支援 Web Speech API 語音識別。建議使用 Chrome 或 Safari 瀏覽器。')
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = SPEECH_LANG[language] || 'ja-JP'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => {
+      setIsListening(true)
+      setTranscript('')
+    }
+
+    recognition.onresult = (event) => {
+      const recognized = event.results[0][0].transcript
+      setTranscript(recognized)
+      setIsListening(false)
+      onResult?.(recognized)
+    }
+
+    recognition.onerror = () => {
+      setIsListening(false)
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+    }
+
+    recognition.start()
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2">
+      <button
+        onClick={startListening}
+        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+          isListening
+            ? 'bg-rose-500 text-white animate-pulse'
+            : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'
+        }`}
+      >
+        {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+        <span>{isListening ? '請開口朗讀...' : '🎤 語音辨識練習'}</span>
+      </button>
+      {transcript && (
+        <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
+          辨識結果: "{transcript}"
+        </span>
+      )}
+    </div>
   )
 }
 

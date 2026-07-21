@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flame, Trophy, PlayCircle, BookOpen, Sparkles, Volume2, ArrowRight } from 'lucide-react'
 import FuriganaText from './FuriganaText'
+import MemoryAnalyticsChart from './MemoryAnalyticsChart'
 
 export default function Dashboard({
   grammarList = [],
@@ -68,6 +69,9 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* Memory Retention & 7-Day SRS Forecast Chart */}
+      <MemoryAnalyticsChart vocabList={vocabList} grammarList={grammarList} dueCount={dueCount} />
+
       {/* Daily Phrase Card */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3">
         <div className="flex items-center justify-between">
@@ -90,6 +94,7 @@ export default function Dashboard({
         <p className="text-slate-600 dark:text-slate-300 text-sm font-medium">{dailyPhrase.meaning}</p>
         <p className="text-xs text-slate-400 font-mono">{dailyPhrase.romaji}</p>
       </div>
+
 
       {/* Curriculum Progress Grid */}
       <div>
