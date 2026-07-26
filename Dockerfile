@@ -14,7 +14,6 @@ RUN npm ci --omit=dev
 # Bundle app source (only the backend files needed)
 COPY server.js .
 COPY server/ ./server/
-COPY .env* ./
 
 # If you have other backend folders needed, copy them here
 # e.g., COPY src/supabase.js ./src/
