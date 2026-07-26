@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install ONLY production dependencies (skip devDependencies like vite, playwright, etc.)
-RUN npm ci --omit=dev
+RUN npm install --production
 
 # Bundle app source (only the backend files needed)
 COPY server.js .
