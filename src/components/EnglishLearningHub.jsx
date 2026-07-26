@@ -31,7 +31,12 @@ export default function EnglishLearningHub({
   onToggleExpressionSave,
   onToggleVocabSave,
 }) {
-  const current = moduleSummaries[activeTab]
+  const current = moduleSummaries?.[activeTab] || moduleSummaries?.expressions || {
+    title: 'Module Overview',
+    description: 'Explore curated learning modules.',
+    starterSets: [],
+    sampleItems: [],
+  }
 
   if (activeTab === 'reading') {
     return (

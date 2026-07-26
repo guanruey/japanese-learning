@@ -10,9 +10,7 @@
   padding: 24px;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background:
-    radial-gradient(circle at top left, rgba(205, 150, 61, 0.18), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(252, 248, 241, 0.98));
+  background: var(--surface);
 }
 
 .scenario-studio__eyebrow,
@@ -23,6 +21,12 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #9a5a1d;
+}
+
+.scenario-studio__description {
+  font-size: 1.125rem;
+  color: var(--ink-2);
+  line-height: 1.7;
 }
 
 .scenario-studio__hero h2 {
@@ -41,10 +45,9 @@
 .scenario-studio__hero-card,
 .scenario-studio__card,
 .scenario-step,
-.scenario-repair {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.86);
+.scenario-studio__categories {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
 }
 
 .scenario-studio__hero-card {
@@ -55,7 +58,8 @@
 
 .scenario-studio__hero-card p {
   font-weight: 700;
-  color: #6e4115;
+  color: var(--ink);
+  margin-bottom: 1rem;
 }
 
 .scenario-studio__hero-card ul,
@@ -108,7 +112,7 @@
 }
 
 .scenario-studio__card--primary {
-  background: linear-gradient(180deg, rgba(255, 242, 230, 0.9), rgba(255, 255, 255, 0.98));
+  background: var(--surface-2);
 }
 
 .scenario-studio__card h3 {
@@ -148,6 +152,18 @@
   gap: 14px;
 }
 
+.scenario-studio__toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-xs);
+  backdrop-filter: blur(12px);
+}
+
 .scenario-studio__examples {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -157,7 +173,7 @@
 .scenario-example-group {
   border: 1px solid rgba(154, 90, 29, 0.12);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.88);
+  background: var(--surface-2);
   padding: 16px;
   display: grid;
   gap: 10px;
@@ -272,88 +288,9 @@
   }
 }
 
-[data-theme="dark"] .scenario-studio__hero {
-  background:
-    radial-gradient(circle at top left, rgba(205, 150, 61, 0.12), transparent 32%),
-    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
-}
-
-[data-theme="dark"] .scenario-studio__categories button,
-[data-theme="dark"] .scenario-studio__toggle button,
-[data-theme="dark"] .scenario-studio__scenarios button {
-  background: rgba(31, 41, 55, 0.86);
-  border-color: rgba(111, 125, 152, 0.3);
-}
-
-[data-theme="dark"] .scenario-studio__categories button.is-active,
-[data-theme="dark"] .scenario-studio__toggle button.is-active,
-[data-theme="dark"] .scenario-studio__scenarios button.is-active {
-  background: #9a5a1d;
-  border-color: #9a5a1d;
-  color: white;
-}
-
-[data-theme="dark"] .scenario-studio__eyebrow,
-[data-theme="dark"] .scenario-studio__label,
-[data-theme="dark"] .scenario-step__label {
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .scenario-studio__hero-card,
-[data-theme="dark"] .scenario-studio__card,
-[data-theme="dark"] .scenario-step,
-[data-theme="dark"] .scenario-repair,
-[data-theme="dark"] .scenario-example-group {
-  background: rgba(31, 41, 55, 0.86);
-  border-color: rgba(197, 109, 45, 0.22);
-}
-
-[data-theme="dark"] .scenario-studio__hero-card p {
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .scenario-studio__card--primary {
-  background: linear-gradient(180deg, rgba(82, 58, 43, 0.88), rgba(31, 41, 55, 0.98));
-}
-
-[data-theme="dark"] .scenario-studio__meta span,
-[data-theme="dark"] .scenario-studio__chips span {
-  background: rgba(197, 109, 45, 0.16);
-  border-color: rgba(197, 109, 45, 0.24);
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .scenario-studio__chips--muted span {
-  background: rgba(111, 125, 152, 0.16);
-  border-color: rgba(111, 125, 152, 0.24);
-  color: #d1d5db;
-}
-
-[data-theme="dark"] .scenario-example-group {
-  border-color: rgba(197, 109, 45, 0.18);
-}
-
-[data-theme="dark"] .scenario-step__index {
-  background: rgba(197, 109, 45, 0.16);
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .scenario-step blockquote {
-  border-left-color: #d99052;
-}
-
-[data-theme="dark"] .scenario-repair__weak {
-  color: #fca5a5;
-}
-
-[data-theme="dark"] .scenario-repair__better {
-  color: #a7f3d0;
-}
-
-[data-theme="dark"] .scenario-speak-btn {
-  border-color: rgba(197, 109, 45, 0.24);
-  background: rgba(197, 109, 45, 0.16);
-  color: #f2d4bf;
+.scenario-studio__toolbar button:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
 }
 
 /* ── Practice Mode ── */
@@ -373,22 +310,23 @@
   background: var(--bg);
 }
 
-.scenario-mode-toggle button {
-  padding: 4px 14px;
-  border: none;
-  border-radius: 5px;
-  background: transparent;
+.scenario-studio__toolbar button {
+  padding: 0.625rem 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-2);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-secondary, #888);
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.scenario-mode-toggle button.is-active {
-  background: var(--card);
-  color: var(--text);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+.scenario-studio__toggle button.is-active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-xs);
 }
 
 .practice-view {
@@ -507,7 +445,7 @@
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--ink);
   transition: background 0.15s;
 }
 

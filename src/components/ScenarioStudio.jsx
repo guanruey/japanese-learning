@@ -68,15 +68,15 @@ function VoiceInputButton({ targetText, language, onResult }) {
         onClick={startListening}
         className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
           isListening
-            ? 'bg-rose-500 text-white animate-pulse'
-            : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'
+            ? 'bg-[var(--danger)] text-white animate-pulse'
+            : 'bg-[var(--primary-light)] text-[var(--primary)] hover:bg-[var(--primary-dim)]'
         }`}
       >
         {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
         <span>{isListening ? '請開口朗讀...' : '🎤 語音辨識練習'}</span>
       </button>
       {transcript && (
-        <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
+        <span className="text-xs font-mono text-[#059669] bg-[#059669]/10 px-2 py-0.5 rounded-md">
           辨識結果: "{transcript}"
         </span>
       )}

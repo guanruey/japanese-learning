@@ -11,9 +11,7 @@
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background:
-    radial-gradient(circle at top right, rgba(92, 122, 198, 0.18), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 247, 253, 0.98));
+  background: var(--surface);
 }
 
 .english-vocabulary__eyebrow {
@@ -126,7 +124,7 @@
 
 .english-vocabulary-card.is-active {
   border-color: rgba(52, 87, 163, 0.34);
-  background: linear-gradient(180deg, rgba(231, 239, 255, 0.82), rgba(255, 255, 255, 0.98));
+  background: var(--canvas);
   box-shadow: 0 10px 24px rgba(52, 87, 163, 0.08);
 }
 
@@ -259,42 +257,7 @@
   }
 }
 
-[data-theme="dark"] .english-vocabulary__header {
-  background:
-    radial-gradient(circle at top right, rgba(92, 122, 198, 0.14), transparent 32%),
-    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
-}
 
-[data-theme="dark"] .english-vocabulary__eyebrow {
-  color: #c7d5ff;
-}
-
-[data-theme="dark"] .english-vocabulary__metrics span,
-[data-theme="dark"] .english-vocabulary__badges span,
-[data-theme="dark"] .english-vocabulary__tags span {
-  background: rgba(92, 122, 198, 0.16);
-  border-color: rgba(92, 122, 198, 0.24);
-  color: #c7d5ff;
-}
-
-[data-theme="dark"] .english-vocabulary-card {
-  background: rgba(31, 41, 55, 0.86);
-}
-
-[data-theme="dark"] .english-vocabulary-card.is-active {
-  background: linear-gradient(180deg, rgba(53, 72, 112, 0.88), rgba(31, 41, 55, 0.98));
-}
-
-[data-theme="dark"] .english-vocabulary__panel {
-  background: rgba(31, 41, 55, 0.84);
-  border-color: rgba(92, 122, 198, 0.22);
-}
-
-[data-theme="dark"] .english-vocabulary__tags--muted span {
-  background: rgba(111, 125, 152, 0.16);
-  border-color: rgba(111, 125, 152, 0.24);
-  color: #c4cad7;
-}
 
 /* ── Save button (shared via English expressions browser styles) ── */
 .english-vocabulary .english-save-btn {

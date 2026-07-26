@@ -13,7 +13,7 @@ export default function FuriganaText({ text, reading, mode = 'furigana', classNa
     return (
       <ruby className={className}>
         <rb>{text}</rb>
-        <rt>{displayReading}</rt>
+        <rt aria-hidden="true">{displayReading}</rt>
       </ruby>
     )
   }
@@ -21,7 +21,7 @@ export default function FuriganaText({ text, reading, mode = 'furigana', classNa
   return (
     <ruby className={className}>
       <rb>{text}</rb>
-      <rt>{displayReading}</rt>
+      <rt aria-hidden="true">{displayReading}</rt>
     </ruby>
   )
 }

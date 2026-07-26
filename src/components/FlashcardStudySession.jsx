@@ -1,85 +1,189 @@
-import React, { useState } from 'react'
-import { RotateCw, Volume2, CheckCircle2, Sparkles, RefreshCw } from 'lucide-react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { RotateCw, Volume2, CheckCircle2, Sparkles, Keyboard } from 'lucide-react'
 import FuriganaText from './FuriganaText'
-import { calculateNextSRSState } from '../utils/srsAlgorithm'
+import { calculateNextStability, calculateNextDifficulty, calculateRetrievability } from '../utils/fsrsEngine'
 import { upsertUserProgress } from '../supabase'
+import { speak } from '../utils/speech'
+import { useAppShellStore } from '../stores/appShellStore'
+import { trackLearningEvent } from '../services/eventTracker'
 
-export default function FlashcardStudySession({ items = [], furiganaMode = 'furigana', onFinish }) {
+const triggerHaptic = (pattern = 15) => {
+  if ('vibrate' in navigator) {
+    try { navigator.vibrate(pattern) } catch {}
+  }
+}
+
+export default function FlashcardStudySession({ items = [], onFinish }) {
+  const { readingMode: furiganaMode } = useAppShellStore()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
   const [completedCount, setCompletedCount] = useState(0)
+  const [touchStartX, setTouchStartX] = useState(null)
+  const [swipeOffset, setSwipeOffset] = useState(0)
 
-  if (!items || items.length === 0) {
-    return (
-      <div className="bg-white dark:bg-slate-800 rounded-3xl p-10 text-center max-w-lg mx-auto shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-        <Sparkles className="w-12 h-12 text-indigo-500 mx-auto" />
-        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">太棒了！目前沒有待複習的卡片</h3>
-        <p className="text-slate-500 text-sm">您的所有卡片皆處於記憶保留期間。您可以隨時在單字庫或文法頁面手動選擇卡片進行複習。</p>
-        <button
-          onClick={onFinish}
-          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-md transition"
-        >
-          返回儀表板
-        </button>
-      </div>
-    )
-  }
+  const isFinished = items && items.length > 0 && currentIndex >= items.length
+  const currentItem = items && items.length > 0 ? items[currentIndex] : null
 
-  const isFinished = currentIndex >= items.length
-  const currentItem = items[currentIndex]
-
-  if (isFinished) {
-    return (
-      <div className="bg-white dark:bg-slate-800 rounded-3xl p-10 text-center max-w-lg mx-auto shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-        <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto animate-bounce" />
-        <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100">測驗完成！</h3>
-        <p className="text-slate-600 dark:text-slate-300 text-sm">
-          您成功完成了今天 {completedCount} 張卡片的記憶測驗。持續累積學習天數吧！
-        </p>
-        <button
-          onClick={onFinish}
-          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-md transition"
-        >
-          返回儀表板
-        </button>
-      </div>
-    )
-  }
-
-  const speakJapanese = (text) => {
-    if (!text || !('speechSynthesis' in window)) return
-    window.speechSynthesis.cancel()
+  const speakJapanese = useCallback((text) => {
+    if (!text) return
     const cleanText = text.replace(/\[.*?\]/g, '')
-    const u = new SpeechSynthesisUtterance(cleanText)
-    u.lang = 'ja-JP'
-    u.rate = 0.9
-    window.speechSynthesis.speak(u)
-  }
+    speak(cleanText, 'ja-JP')
+  }, [])
 
-  const handleRate = async (rating) => {
-    const nextSRS = calculateNextSRSState({
-      rating,
-      repetitionCount: currentItem.repetition_count || 0,
-      intervalDays: currentItem.interval_days || 0,
-      easeFactor: currentItem.ease_factor || 2.5,
-    })
+  const handleRate = useCallback(async (rating) => {
+    if (!currentItem) return
+    triggerHaptic(rating === 1 ? [30, 40] : [20])
+    const currentS = currentItem.fsrs_stability || 2.0
+    const currentD = currentItem.fsrs_difficulty || 5.0
+    const currentRep = currentItem.repetition_count || 0
+    
+    let elapsedDays = 0
+    if (currentItem.last_reviewed_at) {
+        elapsedDays = (new Date() - new Date(currentItem.last_reviewed_at)) / (1000 * 60 * 60 * 24)
+    }
+    const currentR = elapsedDays > 0 ? calculateRetrievability(elapsedDays, currentS) : 0
+
+    const nextS = calculateNextStability(currentS, currentD, currentR, rating)
+    const nextD = calculateNextDifficulty(currentD, rating)
+    const nextRep = currentRep + 1
+
+    const nextReviewDate = new Date()
+    // 提早複習機制: 如果 rating 是 1 (Again)，1 天後複習，否則依照 Stability 天數
+    const intervalDays = rating === 1 ? 1 : nextS
+    nextReviewDate.setDate(nextReviewDate.getDate() + intervalDays)
 
     await upsertUserProgress({
       userId: 'local_user',
-      itemId: currentItem.id,
-      itemType: currentItem.kanji ? 'vocabulary' : 'grammar',
-      intervalDays: nextSRS.intervalDays,
-      easeFactor: nextSRS.easeFactor,
-      repetitionCount: nextSRS.repetitionCount,
-      nextReviewAt: nextSRS.nextReviewAt,
+      wordId: currentItem.id,
+      stability: nextS,
+      difficulty: nextD,
+      retrievability: currentR,
+      state: 'Learning',
+      lastReview: new Date().toISOString(),
+      due: nextReviewDate.toISOString(),
+      reps: nextRep,
+      lapses: rating === 1 ? (currentItem.lapses || 0) + 1 : (currentItem.lapses || 0)
     })
 
+    // MVP Event Tracking
+    trackLearningEvent({
+      eventType: 'review.item_rated',
+      sourceSurface: 'FlashcardStudySession',
+      memoryItemRefs: [currentItem.id],
+      evidenceStrength: 'strong',
+      outcome: rating === 1 ? 'failure' : 'success',
+      payload: {
+        rating: rating,
+        is_correct: rating > 1,
+        previous_fsrs_state: {
+          stability: currentS,
+          difficulty: currentD,
+          retrievability: currentR
+        }
+      }
+    });
+
+    trackLearningEvent({
+      eventType: 'memory.state_updated',
+      sourceSurface: 'FlashcardStudySession',
+      memoryItemRefs: [currentItem.id],
+      evidenceStrength: 'verified',
+      payload: {
+        new_stability: nextS,
+        new_difficulty: nextD,
+        reps: nextRep
+      }
+    });
+
     setIsFlipped(false)
+    setSwipeOffset(0)
     setCompletedCount((prev) => prev + 1)
     setCurrentIndex((prev) => prev + 1)
+  }, [currentItem])
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX)
   }
 
-  const mainJapanese = currentItem.kanji || currentItem.pattern || currentItem.japanese || ''
+  const handleTouchMove = (e) => {
+    if (touchStartX === null) return
+    const diff = e.touches[0].clientX - touchStartX
+    setSwipeOffset(diff)
+  }
+
+  const handleTouchEnd = () => {
+    if (swipeOffset > 80 && isFlipped) {
+      // Right Swipe -> Good (3)
+      handleRate(3)
+    } else if (swipeOffset < -80 && isFlipped) {
+      // Left Swipe -> Again (1)
+      handleRate(1)
+    }
+    setTouchStartX(null)
+    setSwipeOffset(0)
+  }
+
+  const mainJapanese = currentItem?.kanji || currentItem?.pattern || currentItem?.japanese || ''
+
+  // Keyboard shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if typing inside input / textarea
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return
+
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault()
+        setIsFlipped((prev) => !prev)
+      } else if ((e.key === 'r' || e.key === 'R') && mainJapanese) {
+        e.preventDefault()
+        speakJapanese(mainJapanese)
+      } else if (isFlipped && ['1', '2', '3', '4'].includes(e.key)) {
+        e.preventDefault()
+        handleRate(Number(e.key))
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isFlipped, mainJapanese, handleRate, speakJapanese])
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="bg-[var(--surface)] rounded-3xl p-10 text-center max-w-lg mx-auto shadow-sm border border-[var(--border)] space-y-4">
+        <Sparkles className="w-12 h-12 text-[var(--primary)] mx-auto" />
+        <h3 className="text-xl font-bold text-[var(--ink)]">太棒了！目前沒有待複習的卡片</h3>
+        <p className="text-[var(--ink-2)] text-sm">您的所有卡片皆處於記憶保留期間。您可以隨時在單字庫或文法頁面手動選擇卡片進行複習。</p>
+        <button
+          onClick={onFinish}
+          className="px-6 py-2.5 bg-[var(--primary)] text-white rounded-xl font-bold text-sm shadow-md transition"
+        >
+          返回儀表板
+        </button>
+      </div>
+    )
+  }
+
+  if (isFinished) {
+    return (
+      <div className="bg-[var(--surface)] rounded-3xl p-10 text-center max-w-lg mx-auto shadow-sm border border-[var(--border)] space-y-4 animate-fadeIn">
+        <div className="relative inline-block">
+          <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto animate-bounce" />
+          <Sparkles className="w-6 h-6 text-[#D97706] absolute -top-1 -right-1 animate-pulse" />
+        </div>
+        <h3 className="text-2xl font-bold text-[var(--ink)]">🎉 測驗完成！</h3>
+        <p className="text-[var(--ink-2)] text-sm">
+          您成功完成了今天 <span className="font-extrabold text-[var(--primary)]">{completedCount}</span> 張卡片的記憶測驗。持續累積學習天數吧！
+        </p>
+        <button
+          onClick={onFinish}
+          className="px-6 py-2.5 bg-[var(--primary)] text-white rounded-xl font-bold text-sm shadow-md transition hover:scale-105 active:scale-95"
+        >
+          返回儀表板
+        </button>
+      </div>
+    )
+  }
+
   const subJapanese = currentItem.reading || ''
   const meaning = currentItem.meaning_zh || currentItem.meaning || currentItem.meaning_en || ''
   const exampleJa = currentItem.example_ja || currentItem.example || ''
@@ -88,115 +192,169 @@ export default function FlashcardStudySession({ items = [], furiganaMode = 'furi
   return (
     <div className="max-w-xl mx-auto space-y-6">
       {/* Header Info */}
-      <div className="flex justify-between items-center text-sm font-semibold text-slate-500">
-        <span>卡片測驗模式 (SRS)</span>
+      <div className="flex justify-between items-center text-sm font-semibold text-[var(--ink-2)]">
+        <div className="flex items-center gap-2">
+          <span>卡片測驗模式 (SRS)</span>
+          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--badge-bg)] text-xs font-normal text-[var(--ink-3)]">
+            <Keyboard className="w-3 h-3" /> Space / 1-4
+          </span>
+        </div>
         <span>
           {currentIndex + 1} / {items.length}
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-[var(--border)] rounded-full overflow-hidden">
         <div
-          className="h-full bg-indigo-600 transition-all duration-300"
+          className="h-full bg-[var(--primary)] transition-all duration-300"
           style={{ width: `${((currentIndex + 1) / items.length) * 100}%` }}
         />
       </div>
 
-      {/* Flashcard Area */}
+      {/* 3D Perspective Flashcard Container with Swipe Gestures */}
       <div
-        onClick={() => setIsFlipped(!isFlipped)}
-        className="cursor-pointer bg-white dark:bg-slate-800 rounded-3xl min-h-[320px] p-8 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all flex flex-col justify-between items-center text-center relative overflow-hidden group"
+        className="perspective-1000 w-full min-h-[340px] touch-pan-y relative"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        <div className="absolute top-4 right-4 flex items-center gap-1 text-xs font-semibold text-slate-400">
-          <RotateCw className="w-4 h-4" />
-          <span>點擊翻面</span>
-        </div>
+        {/* Swipe Stamp Indicators */}
+        {swipeOffset > 40 && (
+          <div className="absolute top-6 right-6 z-50 px-4 py-2 rounded-2xl bg-emerald-500 text-white font-black text-lg shadow-xl transform rotate-12 border-2 border-white animate-bounce pointer-events-none">
+            正解 GOOD 👍
+          </div>
+        )}
+        {swipeOffset < -40 && (
+          <div className="absolute top-6 left-6 z-50 px-4 py-2 rounded-2xl bg-rose-500 text-white font-black text-lg shadow-xl transform -rotate-12 border-2 border-white animate-bounce pointer-events-none">
+            復習 AGAIN 🔄
+          </div>
+        )}
 
-        <div className="my-auto space-y-4 w-full">
-          {!isFlipped ? (
-            /* Front of Card */
-            <div className="space-y-3">
-              <span className="px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider">
-                {currentItem.level || 'N5'}
-              </span>
-              <div className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-slate-100 font-jp tracking-wide">
+        <div
+          onClick={() => {
+            if (Math.abs(swipeOffset) < 10) {
+              triggerHaptic(10)
+              setIsFlipped(!isFlipped)
+            }
+          }}
+          style={{
+            transform: `translateX(${swipeOffset}px) rotate(${swipeOffset * 0.05}deg) ${isFlipped ? 'rotateY(180deg)' : ''}`,
+            transition: swipeOffset === 0 ? 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+          }}
+          className="cursor-pointer transform-style-3d relative min-h-[340px] w-full rounded-3xl"
+        >
+          {/* Front of Card */}
+          <div className="card-pop absolute inset-0 backface-hidden p-8 flex flex-col justify-between items-center text-center">
+            <div className="w-full flex justify-between items-center text-xs font-semibold text-slate-400">
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full badge-jlpt-n5 font-black">
+                  {currentItem.level || 'N5'}
+                </span>
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold text-white ${
+                  currentItem.kanji ? 'bg-cyan-500' : 'bg-indigo-600'
+                }`}>
+                  {currentItem.kanji ? '語彙 Vocabulary' : '文法 Grammar'}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-[var(--badge-bg)] px-2.5 py-1 rounded-lg">
+                <RotateCw className="w-3.5 h-3.5" />
+                <span>點擊 / Space 翻面</span>
+              </div>
+            </div>
+
+            <div className="my-auto space-y-3 w-full">
+              <div className="text-4xl sm:text-5xl font-black text-[var(--ink)] font-jp tracking-wide">
                 {mainJapanese}
               </div>
-              {subJapanese && <p className="text-slate-400 text-sm font-mono">{subJapanese}</p>}
+              {subJapanese && <p className="text-[var(--ink-3)] text-sm font-mono">{subJapanese}</p>}
             </div>
-          ) : (
-            /* Back of Card */
-            <div className="space-y-5 animate-fadeIn">
-              <div className="flex justify-center items-center gap-2">
-                <div className="text-2xl font-bold text-slate-800 dark:text-slate-100 font-jp">
-                  <FuriganaText text={mainJapanese} mode={furiganaMode} />
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    speakJapanese(mainJapanese)
-                  }}
-                  className="p-2 rounded-full bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 hover:scale-110 transition"
-                  title="發音"
-                >
-                  <Volume2 className="w-5 h-5" />
-                </button>
+
+            <p className="text-xs text-[var(--ink-3)] font-semibold">解答隱藏中，請翻面或向左右劃動評分</p>
+          </div>
+
+          {/* Back of Card */}
+          <div className="card-pop absolute inset-0 backface-hidden rotate-y-180 p-6 sm:p-8 flex flex-col justify-between items-center text-center overflow-y-auto">
+            <div className="w-full flex justify-between items-center text-xs font-semibold text-slate-400">
+              <span className="px-3 py-1 rounded-full bg-[#D97706]/10 text-[#D97706] font-extrabold border border-[#D97706]/20">
+                解答與詳解範例
+              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  speakJapanese(mainJapanese)
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--primary-light)] text-[var(--primary)] hover:scale-105 transition font-bold"
+                title="按 [R] 鍵播放語音"
+              >
+                <Volume2 className="w-4 h-4" />
+                <span>發音 [R]</span>
+              </button>
+            </div>
+
+            <div className="my-auto space-y-4 w-full">
+              <div className="text-2xl font-bold text-[var(--ink)] font-jp">
+                <FuriganaText text={mainJapanese} mode={furiganaMode} />
               </div>
 
-              <div className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{meaning}</div>
+              <div className="text-xl font-extrabold text-[var(--primary)]">{meaning}</div>
 
               {exampleJa && (
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 text-left space-y-1">
-                  <p className="text-base font-medium text-slate-800 dark:text-slate-200 font-jp">
+                <div className="p-3.5 rounded-2xl bg-[var(--canvas)] text-left space-y-1 border border-[var(--border)]">
+                  <p className="text-sm sm:text-base font-medium text-[var(--ink)] font-jp">
                     <FuriganaText text={exampleJa} mode={furiganaMode} />
                   </p>
-                  {exampleZh && <p className="text-xs text-slate-500">{exampleZh}</p>}
+                  {exampleZh && <p className="text-xs text-[var(--ink-2)]">{exampleZh}</p>}
                 </div>
               )}
             </div>
-          )}
+
+            <p className="text-xs text-[var(--ink-3)]">請依據您的記憶熟悉度選擇下方評分 (或按鍵盤 1-4)</p>
+          </div>
         </div>
       </div>
 
       {/* Rating Bar (Visible when flipped) */}
       {isFlipped ? (
-        <div className="grid grid-cols-4 gap-2 pt-2 animate-fadeIn">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 animate-fadeIn">
           <button
             onClick={() => handleRate(1)}
-            className="flex flex-col items-center py-3 px-2 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 font-bold text-xs border border-rose-200 dark:border-rose-800 transition"
+            className="btn-duo btn-duo-red flex flex-col items-center justify-center py-3"
           >
-            <span>重來 (1)</span>
-            <span className="text-[10px] font-normal text-rose-500">1天內</span>
+            <span className="text-xs font-black">重來 [1]</span>
+            <span className="text-[10px] font-semibold opacity-90">1天內</span>
           </button>
 
           <button
             onClick={() => handleRate(2)}
-            className="flex flex-col items-center py-3 px-2 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 font-bold text-xs border border-amber-200 dark:border-amber-800 transition"
+            className="btn-duo btn-duo-orange flex flex-col items-center justify-center py-3"
           >
-            <span>吃力 (2)</span>
-            <span className="text-[10px] font-normal text-amber-500">3天後</span>
+            <span className="text-xs font-black">吃力 [2]</span>
+            <span className="text-[10px] font-semibold opacity-90">1天後</span>
           </button>
 
           <button
             onClick={() => handleRate(3)}
-            className="flex flex-col items-center py-3 px-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-bold text-xs border border-emerald-200 dark:border-emerald-800 transition"
+            className="btn-duo btn-duo-blue flex flex-col items-center justify-center py-3"
           >
-            <span>良好 (3)</span>
-            <span className="text-[10px] font-normal text-emerald-500">6天後</span>
+            <span className="text-xs font-black">良好 [3]</span>
+            <span className="text-[10px] font-semibold opacity-90">6天後</span>
           </button>
 
           <button
             onClick={() => handleRate(4)}
-            className="flex flex-col items-center py-3 px-2 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 font-bold text-xs border border-indigo-200 dark:border-indigo-800 transition"
+            className="btn-duo btn-duo-green flex flex-col items-center justify-center py-3"
           >
-            <span>簡單 (4)</span>
-            <span className="text-[10px] font-normal text-indigo-500">12天後</span>
+            <span className="text-xs font-black">簡單 [4]</span>
+            <span className="text-[10px] font-semibold opacity-90">12天後</span>
           </button>
         </div>
       ) : (
-        <p className="text-center text-xs text-slate-400">請點擊卡片顯示解答後進行評分</p>
+        <div className="text-center text-xs text-[var(--ink-2)] py-2 border border-dashed border-[var(--border)] rounded-xl">
+          💡 按按鈕或鍵盤 <kbd className="px-1.5 py-0.5 rounded bg-[var(--badge-bg)] font-mono text-[10px]">Space</kbd> 顯示解答後即可輸入 1-4 進行評分
+        </div>
       )}
     </div>
   )
 }
+

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { supabase } from '../supabase'
 import { speak } from '../utils/speech'
 import FuriganaText from './FuriganaText'
@@ -13,6 +14,7 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('全部')
+  const [isListOpen, setIsListOpen] = useState(false)
 
   useEffect(() => {
     setFilterCategory(initialCategory || '全部')
@@ -91,7 +93,7 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
       </div>
 
       <div className="phrase-cards">
-        {filtered.map(p => (
+        {filtered.slice(0, isListOpen ? filtered.length : 3).map(p => (
           <div key={p.id} className="phrase-card">
             <div className="phrase-header">
               <div className="phrase-main">
@@ -143,6 +145,15 @@ export default function PhrasesLibrary({ initialCategory = '全部', readingMode
           </div>
         ))}
       </div>
+      {filtered.length > 3 && (
+        <button
+          onClick={() => setIsListOpen(!isListOpen)}
+          className="w-full flex items-center justify-center gap-2 py-4 mt-4 text-[var(--ink-2)] bg-[var(--surface)] border border-[var(--border)] rounded-xl transition-all"
+        >
+          <span className="font-bold">{isListOpen ? '收起片語' : `顯示更多片語 (${filtered.length - 3})`}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${isListOpen ? 'rotate-180' : ''}`} />
+        </button>
+      )}
     </div>
   )
 }

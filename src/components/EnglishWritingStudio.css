@@ -11,9 +11,7 @@
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background:
-    radial-gradient(circle at top left, rgba(208, 145, 72, 0.18), transparent 30%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(252, 248, 242, 0.98));
+  background: var(--surface);
 }
 
 .english-writing__eyebrow {
@@ -114,7 +112,7 @@
 
 .english-writing-card.is-active {
   border-color: rgba(154, 83, 24, 0.34);
-  background: linear-gradient(180deg, rgba(252, 236, 220, 0.82), rgba(255, 255, 255, 0.98));
+  background: var(--canvas);
   box-shadow: 0 10px 24px rgba(154, 83, 24, 0.08);
 }
 
@@ -178,7 +176,7 @@
 }
 
 .english-writing__panel--weak {
-  background: linear-gradient(180deg, rgba(255, 241, 235, 0.86), rgba(255, 255, 255, 0.98));
+  background: var(--canvas);
 }
 
 .english-writing__panel h4 {
@@ -258,43 +256,4 @@
   }
 }
 
-[data-theme="dark"] .english-writing__header {
-  background:
-    radial-gradient(circle at top left, rgba(208, 145, 72, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(45, 55, 72, 0.96), rgba(31, 41, 55, 0.98));
-}
 
-[data-theme="dark"] .english-writing__eyebrow {
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .english-writing__metrics span,
-[data-theme="dark"] .english-writing__badges span,
-[data-theme="dark"] .english-writing__tags span {
-  background: rgba(197, 109, 45, 0.16);
-  border-color: rgba(197, 109, 45, 0.24);
-  color: #f2d4bf;
-}
-
-[data-theme="dark"] .english-writing-card {
-  background: rgba(31, 41, 55, 0.86);
-}
-
-[data-theme="dark"] .english-writing-card.is-active {
-  background: linear-gradient(180deg, rgba(99, 63, 41, 0.88), rgba(31, 41, 55, 0.98));
-}
-
-[data-theme="dark"] .english-writing__panel {
-  background: rgba(31, 41, 55, 0.84);
-  border-color: rgba(197, 109, 45, 0.22);
-}
-
-[data-theme="dark"] .english-writing__panel--weak {
-  background: linear-gradient(180deg, rgba(82, 58, 43, 0.9), rgba(31, 41, 55, 0.98));
-}
-
-[data-theme="dark"] .english-writing__reveal {
-  background: rgba(197, 109, 45, 0.16);
-  border-color: rgba(197, 109, 45, 0.24);
-  color: #f2d4bf;
-}

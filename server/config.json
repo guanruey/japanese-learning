@@ -1,0 +1,6 @@
+{
+  "provider": "openrouter",
+  "openaiKey": "",
+  "openrouterKey": "",
+  "openrouterModel": "google/gemini-2.0-flash-exp:free"
+}

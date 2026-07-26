@@ -72,7 +72,36 @@ function pickPreferredVoice(lang, femalePreferred, englishRegion) {
   )[0]
 }
 
-export const speak = (text, lang = 'ja-JP') => {
+let currentAudio = null;
+
+export const speak = async (text, lang = 'ja-JP', onEnd = () => {}, voice = 'nova') => {
+  stopSpeaking()
+
+  // 1. Try ElevenLabs TTS via Local Proxy
+  try {
+    const response = await fetch('http://localhost:3001/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, voice })
+    })
+
+    if (response.ok) {
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      currentAudio = new Audio(url)
+      currentAudio.play()
+      
+      currentAudio.onended = () => {
+        URL.revokeObjectURL(url)
+        onEnd()
+      }
+      return // Success! Skip fallback
+    }
+  } catch (err) {
+    console.warn("ElevenLabs TTS unconfigured or unreachable. Falling back to native SpeechSynthesis.", err)
+  }
+
+  // 2. Fallback to native Web Speech API
   if (!('speechSynthesis' in window)) {
     alert('您的瀏覽器不支援語音合成')
     return
@@ -95,10 +124,17 @@ export const speak = (text, lang = 'ja-JP') => {
   const preferred = pickPreferredVoice(lang, preferences.femalePreferred, preferences.englishRegion)
   if (preferred) utterance.voice = preferred
 
+  utterance.onend = onEnd
+
   window.speechSynthesis.speak(utterance)
 }
 
 export const stopSpeaking = () => {
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+    currentAudio = null
+  }
   if ('speechSynthesis' in window) window.speechSynthesis.cancel()
 }
 

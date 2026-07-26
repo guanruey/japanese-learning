@@ -1,12 +1,13 @@
 import React from 'react'
-import { Flame, Trophy, PlayCircle, BookOpen, Sparkles, Volume2, ArrowRight } from 'lucide-react'
+import { Flame, PlayCircle, BookOpen, Sparkles, Volume2, ArrowRight } from 'lucide-react'
+import { speak } from '../utils/speech'
 import FuriganaText from './FuriganaText'
 import MemoryAnalyticsChart from './MemoryAnalyticsChart'
 
 export default function Dashboard({
   grammarList = [],
   vocabList = [],
-  onNavigate,
+  onNavigate = () => {},
   streakDays = 5,
   dueCount = 0,
   furiganaMode = 'furigana',
@@ -23,153 +24,106 @@ export default function Dashboard({
   }
 
   const speakPhrase = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-      const u = new SpeechSynthesisUtterance('今日も一生懸命頑張りましょう！')
-      u.lang = 'ja-JP'
-      u.rate = 0.9
-      window.speechSynthesis.speak(u)
-    }
+    speak('今日も一生懸命頑張りましょう！', 'ja-JP')
   }
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto pb-16">
-      {/* Top Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800 text-white p-6 sm:p-8 shadow-xl">
-        <div className="relative z-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
-            <Flame className="w-4 h-4 text-amber-300 fill-amber-300" />
-            <span>連續學習 {streakDays} 天</span>
+    <div className="space-y-8 max-w-md mx-auto pb-24 pt-4 px-1">
+      {/* Speak AI / Apple Single Hero Focus Card */}
+      <div className="apple-card p-8 space-y-6 relative overflow-hidden">
+        {/* Top Flame Streak Pill */}
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D97706]/10 text-[#D97706] font-extrabold type-body">
+            <Flame className="w-4 h-4 text-[#D97706] fill-[#D97706] animate-pulse" />
+            <span>連續 {streakDays} 天學習中</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            おかえりなさい！準備好開始今天的日語學習了嗎？
+          {dueCount > 0 && (
+            <span className="px-3 py-1 rounded-full bg-[var(--danger)]/10 text-[var(--danger)] font-black type-body">
+              {dueCount} 個待複習
+            </span>
+          )}
+        </div>
+
+        {/* Unified Apple Typography */}
+        <div className="space-y-2">
+          <h2 className="type-hero text-[var(--ink)]">
+            今日學習目標
           </h2>
-
-          <p className="text-indigo-100 text-sm max-w-xl">
-            掌握 JLPT N5 與 N4 的核心文法與實用單字，透過科學化 SRS 間隔記憶法打造持久記憶。
+          <p className="type-title text-[var(--ink-2)]">
+            用科學化 SRS 記憶法，輕鬆鞏固日語
           </p>
+        </div>
 
-          <div className="pt-2 flex flex-wrap gap-3">
-            <button
-              onClick={() => onNavigate('srs')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-700 font-bold text-sm shadow-md hover:bg-slate-50 transition transform active:scale-95"
-            >
-              <PlayCircle className="w-5 h-5 text-indigo-600" />
-              <span>開始卡片測驗 {dueCount > 0 ? `(${dueCount} 待複習)` : ''}</span>
-            </button>
-            <button
-              onClick={() => onNavigate('grammar')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-md transition border border-white/20"
-            >
-              <BookOpen className="w-4 h-4" />
-              <span>瀏覽文法庫</span>
-            </button>
-          </div>
+        {/* Giant Single Action Button */}
+        <button
+          onClick={() => onNavigate('srs')}
+          className="w-full h-15 rounded-2xl bg-[var(--primary)] hover:bg-[var(--primary-dim)] text-white font-black text-base flex items-center justify-center gap-3 shadow-[var(--shadow-sm)] active:scale-95 transition-all"
+        >
+          <PlayCircle className="w-6 h-6 text-white" />
+          <span>開始 5 分鐘學習測驗</span>
+        </button>
+
+        {/* 3 Clean Quick Navigation Pills */}
+        <div className="grid grid-cols-3 gap-2.5 pt-2">
+          <button
+            onClick={() => onNavigate('grammar')}
+            className="p-3 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface)] text-center transition"
+          >
+            <div className="text-xs font-black text-[var(--ink)]">N5 文法</div>
+            <div className="text-[10px] font-bold text-[var(--ink-3)] mt-0.5">{n5GrammarCount} 句</div>
+          </button>
+
+          <button
+            onClick={() => onNavigate('grammar')}
+            className="p-3 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface)] text-center transition"
+          >
+            <div className="text-xs font-black text-[var(--ink)]">N4 文法</div>
+            <div className="text-[10px] font-bold text-[var(--ink-3)] mt-0.5">{n4GrammarCount} 句</div>
+          </button>
+
+          <button
+            onClick={() => onNavigate('vocabulary')}
+            className="p-3 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] hover:bg-[var(--surface)] text-center transition"
+          >
+            <div className="text-xs font-black text-[var(--ink)]">核心單字</div>
+            <div className="text-[10px] font-bold text-[var(--ink-3)] mt-0.5">{totalVocabCount} 字</div>
+          </button>
         </div>
       </div>
 
-      {/* Memory Retention & 7-Day SRS Forecast Chart */}
-      <MemoryAnalyticsChart vocabList={vocabList} grammarList={grammarList} dueCount={dueCount} />
-
-      {/* Daily Phrase Card */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3">
+      {/* Daily Phrase Card - Minimalist Glass Card */}
+      <div className="apple-card p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-xs tracking-wider uppercase">
-            <Sparkles className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[var(--primary)] font-extrabold text-xs">
+            <Sparkles className="w-4 h-4 fill-[var(--primary)]" />
             <span>每日日語一言</span>
           </div>
           <button
             onClick={speakPhrase}
-            className="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+            className="w-10 h-10 rounded-2xl bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center hover:scale-105 active:scale-95 transition"
             title="發音播放"
           >
             <Volume2 className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="text-xl sm:text-2xl font-bold font-jp text-slate-800 dark:text-slate-100">
+        <div className="text-2xl sm:text-3xl font-black font-jp text-[var(--ink)] leading-snug">
           <FuriganaText text={dailyPhrase.japanese} mode={furiganaMode} />
         </div>
-        <p className="text-slate-600 dark:text-slate-300 text-sm font-medium">{dailyPhrase.meaning}</p>
-        <p className="text-xs text-slate-400 font-mono">{dailyPhrase.romaji}</p>
+        <p className="text-[var(--ink-2)] text-sm font-bold">{dailyPhrase.meaning}</p>
       </div>
 
-
-      {/* Curriculum Progress Grid */}
-      <div>
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">學習進度概覽</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {/* N5 Progress Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm space-y-4 hover:border-indigo-300 transition">
-            <div className="flex justify-between items-start">
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-bold">
-                JLPT N5
-              </span>
-              <Trophy className="w-5 h-5 text-emerald-500" />
-            </div>
-
-            <div>
-              <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{n5GrammarCount} 句型</div>
-              <p className="text-xs text-slate-500 mt-1">涵蓋基礎助詞、動詞變化與日常句構</p>
-            </div>
-
-            <button
-              onClick={() => onNavigate('grammar')}
-              className="w-full flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline pt-2 border-t border-slate-100 dark:border-slate-700"
-            >
-              <span>查看 N5 文法句型</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* N4 Progress Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm space-y-4 hover:border-indigo-300 transition">
-            <div className="flex justify-between items-start">
-              <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 text-xs font-bold">
-                JLPT N4
-              </span>
-              <Trophy className="w-5 h-5 text-blue-500" />
-            </div>
-
-            <div>
-              <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{n4GrammarCount} 句型</div>
-              <p className="text-xs text-slate-500 mt-1">進階條件句、授受動詞與被動使役</p>
-            </div>
-
-            <button
-              onClick={() => onNavigate('grammar')}
-              className="w-full flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline pt-2 border-t border-slate-100 dark:border-slate-700"
-            >
-              <span>查看 N4 文法句型</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Vocab Summary Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm space-y-4 hover:border-indigo-300 transition">
-            <div className="flex justify-between items-start">
-              <span className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 text-xs font-bold">
-                核心字彙
-              </span>
-              <Sparkles className="w-5 h-5 text-purple-500" />
-            </div>
-
-            <div>
-              <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{totalVocabCount}+ 單字</div>
-              <p className="text-xs text-slate-500 mt-1">附日語重音標記、音檔播放與搭配詞</p>
-            </div>
-
-            <button
-              onClick={() => onNavigate('vocabulary')}
-              className="w-full flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline pt-2 border-t border-slate-100 dark:border-slate-700"
-            >
-              <span>探索單字庫</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Collapsible Advanced SRS Analytics */}
+      <details className="group border border-[var(--border)] rounded-2xl bg-[var(--surface)] shadow-xs overflow-hidden transition">
+        <summary className="px-5 py-3.5 flex items-center justify-between font-bold text-xs text-[var(--ink-2)] cursor-pointer select-none">
+          <span>📊 查看詳細記憶數據與預測</span>
+          <span className="text-xs group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <div className="p-3 border-t border-[var(--border)]">
+          <MemoryAnalyticsChart vocabList={vocabList} grammarList={grammarList} dueCount={dueCount} />
         </div>
-      </div>
+      </details>
     </div>
   )
 }

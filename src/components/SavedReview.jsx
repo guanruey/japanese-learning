@@ -4,23 +4,23 @@ import { fallbackPhrases } from '../data/phrases'
 import { speak } from '../utils/speech'
 import FuriganaText from './FuriganaText'
 import './SavedReview.css'
+import { useSavedItemsStore } from '../stores/savedItemsStore'
+import { useAppShellStore } from '../stores/appShellStore'
 
 export default function SavedReview({
   grammarData = [],
-  savedGrammarIds = [],
-  savedVocabularyIds = [],
-  savedPhraseIds = [],
-  readingMode = 'furigana',
-  onToggleGrammarSave,
-  onToggleVocabSave,
-  onTogglePhraseSave,
   englishExpressionsData = [],
   englishVocabData = [],
-  savedEnglishExpressionIds = [],
-  savedEnglishVocabIds = [],
-  onToggleEnglishExpressionSave,
-  onToggleEnglishVocabSave,
 }) {
+  const { readingMode } = useAppShellStore()
+  const {
+    savedGrammarIds, toggleGrammarSaved,
+    savedVocabularyIds, toggleVocabularySaved,
+    savedPhraseIds, togglePhraseSaved,
+    savedEnglishExpressionIds, toggleEnglishExpressionSaved,
+    savedEnglishVocabIds, toggleEnglishVocabSaved,
+  } = useSavedItemsStore()
+
   const [vocabData, setVocabData] = useState([])
   const [phraseData, setPhraseData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -96,7 +96,7 @@ export default function SavedReview({
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <button
                       className="save-btn is-saved"
-                      onClick={() => onToggleGrammarSave?.(g.id)}
+                      onClick={() => toggleGrammarSaved(g.id)}
                       aria-pressed
                       title="取消保存"
                     >★ 保存済み</button>
@@ -136,7 +136,7 @@ export default function SavedReview({
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <button
                       className="save-btn is-saved"
-                      onClick={() => onToggleVocabSave?.(v.id)}
+                      onClick={() => toggleVocabularySaved(v.id)}
                       aria-pressed
                       title="取消保存"
                     >★ 保存済み</button>
@@ -176,7 +176,7 @@ export default function SavedReview({
                   <div className="phrase-badges">
                     <button
                       className="save-btn is-saved"
-                      onClick={() => onTogglePhraseSave?.(p.id)}
+                      onClick={() => togglePhraseSaved(p.id)}
                       aria-pressed
                       title="取消保存"
                     >★ 保存済み</button>
@@ -209,9 +209,9 @@ export default function SavedReview({
                     <h3 className="saved-english-card__pattern">{e.pattern}</h3>
                   </div>
                   <button
-                    className="english-save-btn is-saved"
-                    onClick={() => onToggleEnglishExpressionSave?.(e.id)}
-                    title="取消儲存"
+                    className="save-btn is-saved"
+                    onClick={() => toggleEnglishExpressionSaved(e.id)}
+                    title="取消收藏"
                   >★</button>
                 </div>
                 <p className="saved-english-card__zh">{e.explanationZh}</p>
@@ -235,9 +235,9 @@ export default function SavedReview({
                     <h3 className="saved-english-card__pattern">{v.headword}</h3>
                   </div>
                   <button
-                    className="english-save-btn is-saved"
-                    onClick={() => onToggleEnglishVocabSave?.(v.id)}
-                    title="取消儲存"
+                    className="save-btn is-saved"
+                    onClick={() => toggleEnglishVocabSaved(v.id)}
+                    title="取消收藏"
                   >★</button>
                 </div>
                 <p className="saved-english-card__zh">{v.meaningZh}</p>
