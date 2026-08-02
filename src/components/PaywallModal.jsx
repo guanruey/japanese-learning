@@ -55,56 +55,51 @@ export default function PaywallModal() {
 
         {/* ⚡️ FREE VS. PRO SIDE-BY-SIDE COMPARISON TABLE */}
         <div className="px-5 my-4">
-          <div className="text-xs font-extrabold text-[var(--primary)] uppercase tracking-wider mb-2.5 flex items-center gap-1.5 justify-center">
-            <Zap size={14} className="text-[var(--primary)] fill-[var(--primary)]" />
-            <span>櫻花石計次方案 vs. VIP 會員 權益差異</span>
+          <div className="text-xs font-bold text-[var(--ink-2)] tracking-wider mb-2.5 flex items-center gap-1.5 justify-center">
+            <span>透明權益與方案對比</span>
           </div>
 
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden text-xs">
             {/* Table Header */}
-            <div className="grid grid-cols-[1fr_80px_80px] gap-2 p-3 font-extrabold bg-[var(--canvas)] border-b border-[var(--border)]">
+            <div className="grid grid-cols-[1fr_65px_75px_75px] gap-1 p-3 font-bold bg-[var(--canvas)] border-b border-[var(--border)] text-center">
               <div className="text-left text-[var(--ink-2)]">權益功能</div>
-              <div className="text-[var(--ink-2)]">🌸 櫻花石計次</div>
-              <div className="text-[var(--primary)] flex items-center justify-center gap-0.5">
-                <Crown size={12} /> VIP
-              </div>
+              <div className="text-[var(--ink-3)]">免費</div>
+              <div className="text-[var(--primary)] font-extrabold">Pro VIP</div>
+              <div className="text-amber-600 font-extrabold">BYOK</div>
             </div>
 
             {/* Rows */}
             <div className="divide-y divide-[var(--border)]">
               {/* Row 1 */}
-              <div className="grid grid-cols-3 p-2.5 items-center text-center">
-                <div className="text-left font-bold text-[var(--ink)]">JLPT / 詞庫解鎖</div>
-                <div className="text-[var(--ink-3)]">僅限 N5 基礎</div>
-                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">N5~N1 + 多益全開</div>
+              <div className="grid grid-cols-[1fr_65px_75px_75px] p-2.5 items-center text-center">
+                <div className="text-left font-bold text-[var(--ink)]">JLPT 完整詞庫</div>
+                <div className="text-[var(--ink-3)]">N5</div>
+                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">N5~N1</div>
+                <div className="font-bold text-amber-700 bg-amber-500/10 py-1 rounded-lg">N5~N1</div>
               </div>
 
               {/* Row 2 */}
-              <div className="grid grid-cols-3 p-2.5 items-center text-center">
-                <div className="text-left font-bold text-[var(--ink)]">FSRS 智能記憶</div>
-                <div className="text-[var(--ink-3)]">每日限 5 單字</div>
-                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">無限次記憶演算</div>
+              <div className="grid grid-cols-[1fr_65px_75px_75px] p-2.5 items-center text-center">
+                <div className="text-left font-bold text-[var(--ink)]">FSRS 記憶演算</div>
+                <div className="text-[var(--ink-3)]">基礎</div>
+                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">無限次</div>
+                <div className="font-bold text-amber-700 bg-amber-500/10 py-1 rounded-lg">無限次</div>
               </div>
 
               {/* Row 3 */}
-              <div className="grid grid-cols-3 p-2.5 items-center text-center">
-                <div className="text-left font-bold text-[var(--ink)]">AI 真人語音對話</div>
-                <div className="text-[var(--ink-3)]">每日限 2 次</div>
-                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">無限對話 + 即時糾錯</div>
+              <div className="grid grid-cols-[1fr_65px_75px_75px] p-2.5 items-center text-center">
+                <div className="text-left font-bold text-[var(--ink)]">AI 對話教練</div>
+                <div className="text-[var(--ink-3)]">試用</div>
+                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">無限次</div>
+                <div className="font-bold text-amber-700 bg-amber-500/10 py-1 rounded-lg">自備 Key</div>
               </div>
 
               {/* Row 4 */}
-              <div className="grid grid-cols-3 p-2.5 items-center text-center">
-                <div className="text-left font-bold text-[var(--ink)]">SLA 學術得體徽章</div>
-                <div className="text-[var(--danger)] font-bold">❌ 無法檢視</div>
-                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">全徽章實時解析</div>
-              </div>
-
-              {/* Row 5 */}
-              <div className="grid grid-cols-3 p-2.5 items-center text-center">
-                <div className="text-left font-bold text-[var(--ink)]">English Lab 雙語</div>
-                <div className="text-[var(--ink-3)]">🔒 鎖定中</div>
-                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">全館雙語雙軌特訓</div>
+              <div className="grid grid-cols-[1fr_65px_75px_75px] p-2.5 items-center text-center">
+                <div className="text-left font-bold text-[var(--ink)]">母語遷移診斷</div>
+                <div className="text-[var(--ink-3)]">基礎</div>
+                <div className="font-extrabold text-[var(--primary)] bg-[var(--primary-light)] py-1 rounded-lg">完整解析</div>
+                <div className="font-bold text-amber-700 bg-amber-500/10 py-1 rounded-lg">完整解析</div>
               </div>
             </div>
           </div>

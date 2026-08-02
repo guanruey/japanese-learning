@@ -319,39 +319,39 @@ export default function FlashcardStudySession({ items = [], onFinish }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 animate-fadeIn">
           <button
             onClick={() => handleRate(1)}
-            className="btn-duo btn-duo-red flex flex-col items-center justify-center py-3"
+            className="h-12 rounded-xl bg-rose-500/10 text-rose-700 border border-rose-200 flex flex-col items-center justify-center transition active:scale-95 hover:bg-rose-500/20"
           >
-            <span className="text-xs font-black">重來 [1]</span>
-            <span className="text-[10px] font-semibold opacity-90">1天內</span>
+            <span className="text-xs font-bold">重來 [1]</span>
+            <span className="text-[10px] opacity-75">1天內</span>
           </button>
 
           <button
             onClick={() => handleRate(2)}
-            className="btn-duo btn-duo-orange flex flex-col items-center justify-center py-3"
+            className="h-12 rounded-xl bg-amber-500/10 text-amber-700 border border-amber-200 flex flex-col items-center justify-center transition active:scale-95 hover:bg-amber-500/20"
           >
-            <span className="text-xs font-black">吃力 [2]</span>
-            <span className="text-[10px] font-semibold opacity-90">1天後</span>
+            <span className="text-xs font-bold">吃力 [2]</span>
+            <span className="text-[10px] opacity-75">1天後</span>
           </button>
 
           <button
             onClick={() => handleRate(3)}
-            className="btn-duo btn-duo-blue flex flex-col items-center justify-center py-3"
+            className="h-12 rounded-xl bg-emerald-500/10 text-emerald-700 border border-emerald-200 flex flex-col items-center justify-center transition active:scale-95 hover:bg-emerald-500/20"
           >
-            <span className="text-xs font-black">良好 [3]</span>
-            <span className="text-[10px] font-semibold opacity-90">6天後</span>
+            <span className="text-xs font-bold">良好 [3]</span>
+            <span className="text-[10px] opacity-75">6天後</span>
           </button>
 
           <button
             onClick={() => handleRate(4)}
-            className="btn-duo btn-duo-green flex flex-col items-center justify-center py-3"
+            className="h-12 rounded-xl bg-teal-500/10 text-teal-700 border border-teal-200 flex flex-col items-center justify-center transition active:scale-95 hover:bg-teal-500/20"
           >
-            <span className="text-xs font-black">簡單 [4]</span>
-            <span className="text-[10px] font-semibold opacity-90">12天後</span>
+            <span className="text-xs font-bold">簡單 [4]</span>
+            <span className="text-[10px] opacity-75">12天後</span>
           </button>
         </div>
       ) : (
-        <div className="text-center text-xs text-[var(--ink-2)] py-2 border border-dashed border-[var(--border)] rounded-xl">
-          💡 按按鈕或鍵盤 <kbd className="px-1.5 py-0.5 rounded bg-[var(--badge-bg)] font-mono text-[10px]">Space</kbd> 顯示解答後即可輸入 1-4 進行評分
+        <div className="text-center text-xs text-[var(--ink-2)] py-3 border border-dashed border-[var(--border)] rounded-xl bg-[var(--surface-2)]">
+          💡 按按鈕或按 <kbd className="px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)] font-mono text-[10px]">Space</kbd> 翻頁解答
         </div>
       )}
     </div>
