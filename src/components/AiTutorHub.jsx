@@ -90,6 +90,17 @@ export default function AiTutorHub({ readingMode = 'furigana', onNavigate = () =
 
   return (
     <div className="min-h-full flex flex-col w-full max-w-md mx-auto animate-fadeIn">
+      {/* Coming Soon Notice Banner */}
+      <div className="mx-4 mt-2 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-start gap-3 shadow-xs">
+        <Sparkles className="w-5 h-5 shrink-0 mt-0.5 text-amber-500" />
+        <div className="text-xs space-y-1">
+          <p className="font-extrabold text-sm">✨ AI 對話與語音教練・升級維護中 (敬請期待)</p>
+          <p className="opacity-90 leading-relaxed font-medium">
+            AI 導師雲端服務正在進行系統優化，實時語音與情境對話功能將於近期全新上線！單字庫、文法測驗與 FSRS 記憶卡片等功能均正常運作，歡迎繼續學習。
+          </p>
+        </div>
+      </div>
+
       {/* Sub-View Pill Selector */}
       <div className="flex items-center p-1 bg-[var(--surface)] border border-[var(--border)] rounded-full h-[48px] shrink-0 mx-4 mt-2 mb-4">
         <button

@@ -10,6 +10,11 @@ async function getAuthHeaders() {
   };
 }
 
+export async function validateApiKey(provider, key) {
+  if (!key || !key.trim()) return false;
+  return key.length > 10;
+}
+
 export async function generateTutorResponse(messageHistory, systemPrompt) {
   const jsonInstruction = `\n\nCRITICAL: You MUST respond ONLY with a valid JSON object in this exact format, with no markdown tags (\`\`\`) and no preamble:
 {

@@ -23,7 +23,7 @@ import { useState } from 'react'
 const navItems = [
   { id: 'dashboard', label: '首頁', icon: Compass },
   { id: 'path', label: '地圖', icon: MapPin },
-  { id: 'aitutor', label: 'AI導師', icon: Bot },
+  { id: 'aitutor', label: 'AI導師', icon: Bot, badge: '敬請期待' },
   { id: 'stats', label: '數據', icon: BarChart3 },
   { id: 'profile', label: '設定', icon: Settings },
 ]
@@ -134,6 +134,11 @@ export default function Navigation({
                   <Icon className={`w-5 h-5 ${isActive ? 'text-[var(--primary)]' : 'text-[var(--ink-3)]'}`} />
                   <span>{item.label}</span>
                 </div>
+                {item.badge && (
+                  <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-amber-500/15 text-amber-500 border border-amber-500/30">
+                    {item.badge}
+                  </span>
+                )}
                 {isJapanese && item.id === 'srs' && dueCount > 0 && (
                   <span
                     className={`px-2 py-0.5 text-xs font-extrabold rounded-full animate-pulse bg-[var(--danger)] text-white`}
