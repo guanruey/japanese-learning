@@ -25,13 +25,13 @@
    色調：米白底 × 極簡黑字 × 學術墨綠
    風格：專注 · 沉靜 · 高對比                   */
 :root {
-  /* Canvas - 米白，不刺眼 */
-  --canvas:     #F7F6F4;
+  /* Canvas & Base Surfaces (和紙與石紋) */
+  --canvas:     #F8F7F4;
   --surface:    #FFFFFF;
-  --surface-2:  #F4F4F5;
+  --surface-2:  #F2F0EB;
   --card:       #FFFFFF;
-  --card-border: rgba(0, 0, 0, 0.06);
-  --border:     #E7E5E4;
+  --card-border: rgba(0, 0, 0, 0.05);
+  --border:     #E6E3DC;
 
   /* Typography - 高對比純粹 */
   --ink:        #1C1917;
