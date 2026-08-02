@@ -69,8 +69,9 @@ const DEFAULT_PRESCRIPTION = {
  */
 export function generateWeaknessPrescriptions(weaknessScores, weaknessStats, userGoal) {
   const candidates = [];
+  const safeScores = weaknessScores || {};
 
-  for (const [key, score] of Object.entries(weaknessScores)) {
+  for (const [key, score] of Object.entries(safeScores)) {
     const stats = weaknessStats[key] || { occurrences: 0, recentSuccesses: 0 };
     
     // Lifecycle rules:

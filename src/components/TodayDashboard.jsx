@@ -30,29 +30,37 @@ export default function TodayDashboard({
   const [isBreakdownOpen, setIsBreakdownOpen] = useState(false)
   const [isTipsOpen, setIsTipsOpen] = useState(false)
 
+  const safeWeaknessScores = weaknessScores || {};
+  const safeWeaknessStats = weaknessStats || {};
+
   // Safely get a random item from grammarData
   const randomGrammar = (grammarData && grammarData.length > 0) 
     ? grammarData[Math.floor(Math.random() * grammarData.length)] 
     : null;
 
   // Find highest weakness
-  const highestWeakness = Object.entries(weaknessScores).reduce((acc, [key, val]) => {
+  const highestWeakness = Object.entries(safeWeaknessScores).reduce((acc, [key, val]) => {
     return val > acc.score ? { key, score: val } : acc;
   }, { key: null, score: 0 });
 
   // --- Today Engine (AI 決策引擎) ---
-  const userGoal = localStorage.getItem('app_user_goal') || 'travel';
+  let userGoal = 'travel';
+  try {
+    userGoal = localStorage.getItem('app_user_goal') || 'travel';
+  } catch (e) {
+    console.warn('localStorage read error:', e);
+  }
   
   const recommendations = React.useMemo(() => {
     return generateTodayRecommendations({
       srsDueCount,
-      weaknessScores,
-      weaknessStats,
+      weaknessScores: safeWeaknessScores,
+      weaknessStats: safeWeaknessStats,
       userGoal,
       isJapanese,
       randomGrammar
     });
-  }, [srsDueCount, weaknessScores, weaknessStats, userGoal, isJapanese, randomGrammar]);
+  }, [srsDueCount, safeWeaknessScores, safeWeaknessStats, userGoal, isJapanese, randomGrammar]);
 
   const primary = recommendations.find(r => r.slot === 'primary');
   const secondary = recommendations.find(r => r.slot === 'secondary');
