@@ -117,11 +117,11 @@ export default function TodayDashboard({
     <div className="min-h-full flex flex-col items-center justify-center max-w-[420px] mx-auto w-full animate-fadeIn py-6 px-4 gap-4 pb-24">
       {/* Tagline */}
       <div className="w-full text-left mb-2">
-        <h1 className="text-2xl font-black text-[var(--ink)] leading-snug tracking-tight">
-          {isJapanese ? '今日も頑張りましょう' : 'Keep up the momentum'}
+        <h1 className="text-2xl font-bold text-[var(--ink)] leading-snug tracking-tight">
+          {isJapanese ? '今日導航 · 學習焦點' : 'Daily Focus & Practice'}
         </h1>
-        <p className="text-sm text-[var(--ink-3)] mt-1 font-semibold">
-          {isJapanese ? '今日的專屬學習菜單 👇' : 'Your daily learning bento 👇'}
+        <p className="text-xs text-[var(--ink-3)] mt-1 font-medium">
+          {isJapanese ? '每日精準處方與 FSRS 認知記憶排程' : 'Prescriptive micro-practice & spaced repetition'}
         </p>
       </div>
 
@@ -133,48 +133,39 @@ export default function TodayDashboard({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.3 }}
-            className="col-span-2 theme-card p-6 flex flex-col gap-4 relative overflow-hidden cursor-pointer hover:shadow-[var(--shadow-lifted)] border border-[var(--border)]"
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.25 }}
+            className="col-span-2 theme-card p-6 flex flex-col gap-4 relative overflow-hidden cursor-pointer hover:shadow-[var(--shadow-card)] border border-[var(--border)]"
             onClick={() => handleAction(primary)}
           >
-            {/* Glassmorphism subtle glow */}
-            <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full blur-[40px] opacity-20 pointer-events-none transition-opacity group-hover:opacity-30"
-                 style={{ background: 'var(--primary)' }} />
-
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black text-[var(--ink-3)] uppercase tracking-wider bg-[var(--badge-bg)] px-2.5 py-1 rounded-full">
+              <span className="text-[11px] font-bold text-[var(--primary)] bg-[var(--primary-light)] px-3 py-1 rounded-full">
                 {primary.context}
               </span>
-              <span className="text-2xl drop-shadow-sm">{primary.emoji}</span>
+              <span className="text-xl opacity-90">{primary.emoji}</span>
             </div>
 
             <div className="flex flex-col gap-1.5 z-10">
-              <p className="text-[22px] font-black text-[var(--ink)] leading-tight tracking-tight">
+              <p className="text-xl font-bold text-[var(--ink)] leading-tight tracking-tight">
                 {primary.title}
               </p>
               {primary.romaji && (
-                <p className="text-[13px] text-[var(--ink-2)] font-mono">{primary.romaji}</p>
+                <p className="text-xs text-[var(--ink-2)] font-mono">{primary.romaji}</p>
               )}
               {primary.translation && (
-                <p className="text-[13px] font-semibold text-[var(--ink-3)] mt-1">{primary.translation}</p>
+                <p className="text-xs font-medium text-[var(--ink-3)] mt-0.5">{primary.translation}</p>
               )}
-              <p className="text-xs text-[var(--ink-3)] mt-2 bg-[var(--surface)] p-2 rounded-xl border border-[var(--border)] italic">
+              <p className="text-xs text-[var(--ink-2)] mt-2 bg-[var(--surface-2)] p-3 rounded-xl border border-[var(--border)] font-medium leading-relaxed">
                 {primary.reason_text}
               </p>
             </div>
 
             <button
               onClick={(e) => { e.stopPropagation(); handleAction(primary); }}
-              className={`w-full mt-2 h-[52px] rounded-[14px] text-white font-extrabold text-[15px] flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 ${
-                primary.color === 'rose' ? 'bg-rose-500 hover:bg-rose-600' :
-                primary.color === 'amber' ? 'bg-amber-500 hover:bg-amber-600' :
-                primary.color === 'emerald' ? 'bg-emerald-500 hover:bg-emerald-600' :
-                'bg-[var(--primary)] hover:brightness-110 shadow-[var(--shadow-primary)]'
-              }`}
+              className="w-full mt-2 h-12 rounded-xl bg-[var(--primary)] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 shadow-sm"
             >
-              {primary.action === 'review' ? <RotateCw className="w-[18px] h-[18px]" /> : <Mic className="w-[18px] h-[18px]" />}
-              <span>{primary.estimated_minutes} 分鐘 • 開始挑戰</span>
+              {primary.action === 'review' ? <RotateCw className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              <span>{primary.estimated_minutes} 分鐘 • 開始練習</span>
             </button>
           </motion.div>
         )}

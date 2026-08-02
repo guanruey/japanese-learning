@@ -121,12 +121,12 @@ export default function VocabularyBrowser({
             <button
               key={tag}
               onClick={() => setFilterTag(tag)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 ${ filterTag === tag ? 'bg-purple-600 text-white shadow-sm' : 'bg-[var(--surface-2)] text-[var(--ink-2)] hover:bg-[var(--surface-3)]' }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 ${ filterTag === tag ? 'bg-[var(--primary)] text-white shadow-sm' : 'bg-[var(--surface-2)] text-[var(--ink-2)] hover:bg-[var(--surface-3)]' }`}
             >
               {tag === 'all' ? '全部主題' : tag}
             </button>
           ))}
-          <div className="h-4 w-px bg-[var(--surface-3)] mx-1" />
+          <div className="h-4 w-px bg-[var(--border)] mx-1" />
           {['all', 'N5', 'N4', 'N3', 'N2'].map((lvl) => {
             const isLocked = !isPro && lvl !== 'all' && lvl !== 'N5'
             return (
@@ -139,10 +139,10 @@ export default function VocabularyBrowser({
                     setFilterLevel(lvl)
                   }
                 }}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 flex items-center gap-1.5 ${ filterLevel === lvl ? 'bg-[var(--primary)] text-white shadow-sm' : isLocked ? 'bg-purple-950/40 text-purple-300 border border-purple-500/30 hover:bg-purple-900/60' : 'bg-[var(--surface-2)] text-[var(--ink-2)] hover:bg-[var(--surface-3)]' }`}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 flex items-center gap-1.5 ${ filterLevel === lvl ? 'bg-[var(--primary)] text-white shadow-sm' : isLocked ? 'bg-[var(--surface-2)] text-[var(--ink-3)] border border-[var(--border)]' : 'bg-[var(--surface-2)] text-[var(--ink-2)] hover:bg-[var(--surface-3)]' }`}
               >
                 {lvl === 'all' ? '全部級別' : lvl}
-                {isLocked && <Lock size={12} className="text-amber-400" />}
+                {isLocked && <Lock size={12} className="text-amber-500" />}
               </button>
             )
           })}
@@ -169,7 +169,7 @@ export default function VocabularyBrowser({
             return (
               <div
                 key={vocab.id}
-                className="apple-card p-6 flex flex-col justify-between space-y-4"
+                className="theme-card p-6 flex flex-col justify-between space-y-4 border border-[var(--border)]"
               >
                 {/* Header info */}
                 <div className="space-y-3">
@@ -190,9 +190,9 @@ export default function VocabularyBrowser({
 
                     <button
                       onClick={() => onToggleSave && onToggleSave(vocab.id)}
-                      className={`p-2 rounded-xl transition ${ isSaved ? 'text-amber-500 bg-amber-50 ' : 'text-[var(--ink-3)] hover:text-[var(--ink-2)]' }`}
+                      className={`p-2 rounded-xl transition ${ isSaved ? 'text-amber-600 bg-amber-500/10' : 'text-[var(--ink-3)] hover:text-[var(--ink-2)]' }`}
                     >
-                      <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-amber-500' : ''}`} />
+                      <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-amber-600' : ''}`} />
                     </button>
                   </div>
 
@@ -209,10 +209,10 @@ export default function VocabularyBrowser({
 
                     <button
                       onClick={() => speak(vocab.japanese || vocab.word)}
-                      className="w-12 h-12 rounded-2xl bg-[var(--primary)] hover:bg-[var(--primary)] text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/25 active:scale-95 transition"
+                      className="w-11 h-11 rounded-xl bg-[var(--primary-light)] text-[var(--primary)] hover:bg-[var(--primary-dim)] flex items-center justify-center shrink-0 transition active:scale-95 border border-[var(--primary-dim)]"
                       title="朗讀發音"
                     >
-                      <Volume2 className="w-6 h-6" />
+                      <Volume2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
