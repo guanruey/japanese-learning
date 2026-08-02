@@ -26,13 +26,21 @@ export function AuthProvider({ children }) {
     })
 
     // 2. Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) setUser(session?.user ?? null)
-    })
+    let subscription = null
+    try {
+      const res = supabase.auth?.onAuthStateChange?.((_event, session) => {
+        if (mounted) setUser(session?.user ?? null)
+      })
+      subscription = res?.data?.subscription
+    } catch (err) {
+      console.warn('onAuthStateChange error:', err)
+    }
 
     return () => {
       mounted = false
-      subscription?.unsubscribe()
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe()
+      }
     }
   }, [])
 
